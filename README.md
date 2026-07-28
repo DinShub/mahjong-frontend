@@ -1,59 +1,86 @@
-# Frontend
+# mahjong-frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+Angular client for the Riichi Mahjong app. Its own git repository; the specs live in the parent
+`mahjong-app` repo under `docs/`.
 
-## Development server
+Angular 19, **standalone components only**, **signals** for state, `OnPush` everywhere. No NgRx —
+the app's state is one server-authoritative view arriving as events, and a signal store models that
+in a few hundred lines (`docs/07-frontend.md` §1).
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Quick start
 
 ```bash
-ng generate component component-name
+npm ci
+npm run sync:contracts   # pull the wire contract from ../backend
+npm start                # http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+With the backend running (`npm run dev` in `../backend`), the landing page says **Connected** after
+a real socket handshake.
+
+## Scripts
+
+| Script                                 | What                                                           |
+| -------------------------------------- | -------------------------------------------------------------- |
+| `npm start`                            | `ng serve` on :4200                                            |
+| `npm run build`                        | production bundle into `dist/`                                 |
+| `npm run typecheck`                    | `tsc --noEmit` over the app, the specs and the e2e suite       |
+| `npm run lint` / `lint:fix`            | eslint (flat config, angular-eslint incl. template a11y rules) |
+| `npm run format` / `format:check`      | prettier                                                       |
+| `npm test` / `test:watch` / `test:cov` | vitest (jsdom, Angular via `@analogjs/vite-plugin-angular`)    |
+| `npm run e2e` / `e2e:ui`               | Playwright against the mock socket server                      |
+| `npm run sync:contracts`               | copy the contract from the backend                             |
+| `npm run check:contracts`              | fail if the contract was edited or is behind the backend       |
+
+## Layout
+
+```
+src/app/
+├── core/
+│   ├── contracts/   synced from the backend — DO NOT EDIT
+│   ├── config/      environment handling, APP_CONFIG
+│   ├── socket/      typed socket.io wrapper
+│   └── auth/        token storage, refresh interceptor          [M3]
+├── features/
+│   ├── landing/     connection status; becomes play-as-guest/login in M4
+│   └── lobby/ table/ game/ replay/ profile/                     [M4/M5]
+└── shared/                                                      [M4]
+```
+
+### The contract is generated
+
+`src/app/core/contracts/` is copied from the backend's `dist-contracts/` and is never edited here.
+It carries the types, the zod schemas and the constants (`PROTOCOL_VERSION`, tile helpers) — both
+sides validate with the same schemas, so a protocol mismatch is a typed error rather than
+`undefined` three layers deep.
 
 ```bash
-ng generate --help
+npm run sync:contracts -- --backend ../path/to/backend
+npm run check:contracts        # CI: fails on hand-edits and on drift
 ```
 
-## Building
+## Environments
 
-To build the project run:
+`src/environments/environment*.ts` hold the only values that vary: `apiUrl` and `socketUrl`.
 
-```bash
-ng build
-```
+| Configuration           | Points at                                                           |
+| ----------------------- | ------------------------------------------------------------------- |
+| `development` (default) | `http://localhost:3000` — a locally running backend                 |
+| `production`            | same origin (empty strings): the static host proxies to the backend |
+| `e2e`                   | `http://127.0.0.1:3100` — the Playwright mock socket server         |
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The protocol version is **not** an environment value: it comes from the synced contract.
 
-## Running unit tests
+## Testing
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+| Level            | Where              | Notes                                                                      |
+| ---------------- | ------------------ | -------------------------------------------------------------------------- |
+| Unit / component | `src/**/*.spec.ts` | vitest + jsdom; TestBed works normally                                     |
+| E2E              | `e2e/*.spec.ts`    | Playwright vs `e2e/support/mock-socket-server.mjs`, never the real backend |
 
-```bash
-ng test
-```
+The e2e run starts its own app server on :4300 and its own mock on :3100 and never reuses an
+existing server, so it cannot accidentally test whatever else happens to be listening on :4200.
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The mock server speaks the same contract as the gateway (handshake validation, `session:hello`).
+From M4 it also replays canned `GameEvent[]` fixtures — the same fixtures the backend's engine tests
+produce, so both sides are tested against literally the same data.

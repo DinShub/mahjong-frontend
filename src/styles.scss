@@ -1,1 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ * Global styles and theme tokens.
+ *
+ * Everything visual is a custom property (`docs/08-graphics-ux.md` §6): felt, tile body, tile face
+ * ink, highlights, riichi accent. Components reference tokens only — no hardcoded colours — so a
+ * theme switch is a class on the root element. `classic-green` is the default; `dark` is the
+ * alternate. The tile-specific tokens land with the render layer in M4.
+ */
+
+:root,
+.theme-classic-green {
+  --mj-felt: #14532d;
+  --mj-felt-edge: #0d3b20;
+  --mj-surface: #1b6338;
+  --mj-line: #2f7a4d;
+  --mj-text: #f4f6f2;
+  --mj-text-muted: #b9cbbe;
+  --mj-accent: #e8b64c;
+  --mj-ok: #6fd08c;
+  --mj-warn: #e8b64c;
+  --mj-danger: #ef6f6f;
+}
+
+.theme-dark {
+  --mj-felt: #14161a;
+  --mj-felt-edge: #0b0c0f;
+  --mj-surface: #1f2229;
+  --mj-line: #333844;
+  --mj-text: #eceef2;
+  --mj-text-muted: #9aa2b1;
+  --mj-accent: #e8b64c;
+  --mj-ok: #6fd08c;
+  --mj-warn: #e8b64c;
+  --mj-danger: #ef6f6f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mj-felt);
+  color: var(--mj-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--mj-accent);
+  outline-offset: 2px;
+}

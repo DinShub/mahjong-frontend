@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test:cov
+
+      # Verifies the synced contract has not been hand-edited. When BACKEND_REPO is configured the
+      # step below also proves it matches the backend's main — that is the real drift gate.
+      - name: Contract integrity
+        run: npm run check:contracts
+
+      - name: Contract drift vs backend main
+        if: vars.BACKEND_REPO != ''
+        env:
+          BACKEND_REPO: ${{ vars.BACKEND_REPO }}
+        run: |
+          git clone --depth 1 --branch main "https://github.com/${BACKEND_REPO}.git" ../backend-main
+          npm run check:contracts -- --backend ../backend-main
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E
+        run: npx playwright test --project=chromium
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      # Becomes a gate in M6 (tasks/backlog.md).
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+        continue-on-error: true

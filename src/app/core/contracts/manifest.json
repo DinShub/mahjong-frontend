@@ -1,0 +1,13 @@
+{
+  "protocolVersion": 1,
+  "contractsHash": "1f289a1225516fb8a759661f8b00b6bfb680fed38d06cecd13d3bce2fdfb9d88",
+  "files": {
+    "actions.ts": "742de4e2e74c1a399ad99f13a8d0c8036ea3844ff103eacdabd12bab42c9075d",
+    "index.ts": "952c7765a8bf9534e9fa0412f00688b30306833261cd88ad98306055fb4b52ca",
+    "protocol.ts": "17f298a7cfc0de67dc7424b0b59334dbfcd8c9ec208e1070a45027492d400ed8",
+    "schemas.json": "23d23cb2ba82e47ce86df1708075ca64fa7b779ead14c01bacc62afbdd55989c",
+    "schemas.ts": "64d75ffe2766e0d3bb0dd3d9b7c0857484c0aa7318e736419ae71bc2be772833",
+    "tiles.ts": "50d8efe7a2c32e5bb530fafd7a9263beb11fa9c4f81f222234edc66323811e91",
+    "views.ts": "50e335d6067c557544ddc7b1a06f81e2393abb2a02d3f89c18a2dddc7bc7bafe"
+  }
+}

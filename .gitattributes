@@ -1,0 +1,7 @@
+# Check everything out with LF, on every platform. Prettier is configured for LF, and mixed line
+# endings would make `format:check` pass in CI and fail on a Windows checkout.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
