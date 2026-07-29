@@ -524,6 +524,62 @@ export const protocolErrorSchema = z.object({
   promptId: promptIdSchema.optional(),
 });
 
+// ---------------------------------------------------------------------------
+// HTTP auth (`contracts/auth.ts`)
+// ---------------------------------------------------------------------------
+
+/**
+ * Length bounds only. The *policy* — 12 characters, breach list, no display name inside it — lives
+ * in `modules/auth/password.ts`, because it produces a list of reasons a person can act on and a
+ * schema can only say "invalid". The ceiling is here because it is a resource limit: argon2 is
+ * memory-hard by design, so an unbounded password field is a way to spend the server's RAM.
+ */
+export const passwordSchema = z.string().min(1).max(128);
+
+/**
+ * Deliberately permissive: `z.email()` rejects addresses that are valid under RFC 5321, and the
+ * only check that actually establishes an address exists is sending mail to it.
+ */
+export const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(3)
+  .max(254)
+  .regex(/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/, 'expected an email address');
+
+export const displayNameSchema = z.string().trim().min(3).max(24);
+
+export const registerRequestSchema = z.strictObject({
+  email: emailSchema,
+  password: passwordSchema,
+  displayName: displayNameSchema,
+});
+
+export const loginRequestSchema = z.strictObject({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export const upgradeRequestSchema = z.strictObject({
+  email: emailSchema,
+  password: passwordSchema,
+  displayName: displayNameSchema.optional(),
+});
+
+export const refreshRequestSchema = z.strictObject({
+  refreshToken: z.string().min(1).max(4096),
+});
+
+export const logoutRequestSchema = z.strictObject({
+  refreshToken: z.string().min(1).max(4096).optional(),
+});
+
+export const changePasswordRequestSchema = z.strictObject({
+  currentPassword: passwordSchema,
+  newPassword: passwordSchema,
+});
+
 /**
  * Inbound payload schema per client→server event. The gateway looks the schema up by event name,
  * so adding an event without a schema is a type error rather than an unvalidated hole.
@@ -577,6 +633,12 @@ export const SCHEMA_REGISTRY = {
   GameActionPayload: gameActionPayloadSchema,
   GameResyncPayload: gameResyncPayloadSchema,
   GameStampPayload: gameStampPayloadSchema,
+  RegisterRequest: registerRequestSchema,
+  LoginRequest: loginRequestSchema,
+  UpgradeRequest: upgradeRequestSchema,
+  RefreshRequest: refreshRequestSchema,
+  LogoutRequest: logoutRequestSchema,
+  ChangePasswordRequest: changePasswordRequestSchema,
 } as const;
 
 export type SchemaName = keyof typeof SCHEMA_REGISTRY;

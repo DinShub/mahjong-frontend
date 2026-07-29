@@ -919,6 +919,27 @@
         "limitName"
       ]
     },
+    "ChangePasswordRequest": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "currentPassword": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "newPassword": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "currentPassword",
+        "newPassword"
+      ],
+      "additionalProperties": false
+    },
     "ClientAction": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "oneOf": [
@@ -3701,6 +3722,40 @@
       ],
       "additionalProperties": false
     },
+    "LoginRequest": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 254,
+          "pattern": "^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)+$"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "additionalProperties": false
+    },
+    "LogoutRequest": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "additionalProperties": false
+    },
     "MeldWire": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -6337,6 +6392,49 @@
         "code",
         "message"
       ]
+    },
+    "RefreshRequest": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "refreshToken"
+      ],
+      "additionalProperties": false
+    },
+    "RegisterRequest": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 254,
+          "pattern": "^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)+$"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 24
+        }
+      },
+      "required": [
+        "email",
+        "password",
+        "displayName"
+      ],
+      "additionalProperties": false
     },
     "RuleConfig": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -9088,6 +9186,33 @@
         "6z",
         "7z"
       ]
+    },
+    "UpgradeRequest": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 254,
+          "pattern": "^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)+$"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 24
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "additionalProperties": false
     },
     "Wind": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",

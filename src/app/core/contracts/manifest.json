@@ -1,12 +1,13 @@
 {
   "protocolVersion": 1,
-  "contractsHash": "1f289a1225516fb8a759661f8b00b6bfb680fed38d06cecd13d3bce2fdfb9d88",
+  "contractsHash": "3c08dde6f1acfd6197c633e3162139e9dc1d400da7709f2bc7abce198f88cb9c",
   "files": {
     "actions.ts": "742de4e2e74c1a399ad99f13a8d0c8036ea3844ff103eacdabd12bab42c9075d",
-    "index.ts": "952c7765a8bf9534e9fa0412f00688b30306833261cd88ad98306055fb4b52ca",
+    "auth.ts": "b1fbc1c70ac824986bfa18d3d6efa7f623ad2205a74bc698cfa63e53b70eb9b8",
+    "index.ts": "01627f7c491b41526cf9ef62b8d51b80d9cbbbb1b63c0705311b90018beb95cc",
     "protocol.ts": "17f298a7cfc0de67dc7424b0b59334dbfcd8c9ec208e1070a45027492d400ed8",
-    "schemas.json": "23d23cb2ba82e47ce86df1708075ca64fa7b779ead14c01bacc62afbdd55989c",
-    "schemas.ts": "64d75ffe2766e0d3bb0dd3d9b7c0857484c0aa7318e736419ae71bc2be772833",
+    "schemas.json": "73afd579b3d3db229524e792766cf44a322095a24fa07e25cc9b0e6de3e376d8",
+    "schemas.ts": "bd8ff93d8b844f8b49c927cd41912e495f73a6a798ff00ffc1f1e137be4e11b7",
     "tiles.ts": "50d8efe7a2c32e5bb530fafd7a9263beb11fa9c4f81f222234edc66323811e91",
     "views.ts": "50e335d6067c557544ddc7b1a06f81e2393abb2a02d3f89c18a2dddc7bc7bafe"
   }
