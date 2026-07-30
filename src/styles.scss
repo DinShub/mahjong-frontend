@@ -4,7 +4,11 @@
  * Everything visual is a custom property (`docs/08-graphics-ux.md` §6): felt, tile body, tile face
  * ink, highlights, riichi accent. Components reference tokens only — no hardcoded colours — so a
  * theme switch is a class on the root element. `classic-green` is the default; `dark` is the
- * alternate. The tile-specific tokens land with the render layer in M4.
+ * alternate.
+ *
+ * Contrast (`docs/07-frontend.md` §7, WCAG AA — 4.5:1 for body text, 3:1 for large text and UI
+ * boundaries). The ratios that matter are asserted in `contrast.spec.ts` rather than eyeballed,
+ * because a token nudged one step darker to look nicer is exactly how a palette drifts under AA.
  */
 
 :root,
@@ -12,26 +16,88 @@
   --mj-felt: #14532d;
   --mj-felt-edge: #0d3b20;
   --mj-surface: #1b6338;
-  --mj-line: #2f7a4d;
+  --mj-surface-raised: #23764a;
+  --mj-line: #7ecfa4;
   --mj-text: #f4f6f2;
-  --mj-text-muted: #b9cbbe;
-  --mj-accent: #e8b64c;
-  --mj-ok: #6fd08c;
-  --mj-warn: #e8b64c;
-  --mj-danger: #ef6f6f;
+  --mj-text-muted: #cfe0d5;
+  --mj-accent: #f0c463;
+  --mj-accent-ink: #2a1e00;
+  --mj-ok: #8ee0a5;
+  --mj-warn: #f0c463;
+  --mj-danger: #ffc2c2;
+
+  /* Tile body — the slab, not the face. */
+  --mj-tile-body: #f2ead6;
+  --mj-tile-body-hi: #fffaf0;
+  --mj-tile-body-lo: #ded3ba;
+  --mj-tile-side: #b9ab8c;
+  --mj-tile-edge: #c8bb9c;
+  --mj-tile-ink: #23201a;
+  --mj-tile-back: #8fae97;
+  --mj-tile-back-hi: #a8c0ae;
+  --mj-tile-back-edge: #4d7259;
+
+  /* Face ink that is not a theming decision: a red five is red in every theme. */
+  --mj-face-red: #c0392b;
+  --mj-face-green: #1e7a44;
+  --mj-face-blue: #1f4e79;
+
+  /* Optional suit tinting (off by default). Default to the plain ink so the token always resolves. */
+  --mj-ink-man: #23201a;
+  --mj-ink-pin: #1f4e79;
+  --mj-ink-sou: #1e7a44;
+
+  /* High-contrast face set. */
+  --mj-hc-man: #1a1a1a;
+  --mj-hc-pin: #163c5e;
+  --mj-hc-sou: #14522f;
+  --mj-hc-honor: #1a1a1a;
+
+  --mj-riichi-stick: #f5f2e8;
+  --mj-riichi-accent: #ff8a4c;
+  --mj-turn-ring: #f0c463;
 }
 
 .theme-dark {
   --mj-felt: #14161a;
   --mj-felt-edge: #0b0c0f;
   --mj-surface: #1f2229;
-  --mj-line: #333844;
+  --mj-surface-raised: #2b2f39;
+  --mj-line: #737e98;
   --mj-text: #eceef2;
-  --mj-text-muted: #9aa2b1;
-  --mj-accent: #e8b64c;
-  --mj-ok: #6fd08c;
-  --mj-warn: #e8b64c;
-  --mj-danger: #ef6f6f;
+  --mj-text-muted: #c3cad8;
+  --mj-accent: #f0c463;
+  --mj-accent-ink: #23190a;
+  --mj-ok: #8ee0a5;
+  --mj-warn: #f0c463;
+  --mj-danger: #ff9a9a;
+
+  --mj-tile-body: #e6e2d8;
+  --mj-tile-body-hi: #f6f4ee;
+  --mj-tile-body-lo: #cbc6b8;
+  --mj-tile-side: #9a9483;
+  --mj-tile-edge: #b0aa9a;
+  --mj-tile-ink: #1b1b1e;
+  --mj-tile-back: #636f90;
+  --mj-tile-back-hi: #78859f;
+  --mj-tile-back-edge: #39415a;
+
+  --mj-face-red: #c0392b;
+  --mj-face-green: #1e7a44;
+  --mj-face-blue: #1f4e79;
+
+  --mj-ink-man: #1b1b1e;
+  --mj-ink-pin: #1f4e79;
+  --mj-ink-sou: #1e7a44;
+
+  --mj-hc-man: #141414;
+  --mj-hc-pin: #163c5e;
+  --mj-hc-sou: #14522f;
+  --mj-hc-honor: #141414;
+
+  --mj-riichi-stick: #f5f2e8;
+  --mj-riichi-accent: #ff8a4c;
+  --mj-turn-ring: #f0c463;
 }
 
 * {

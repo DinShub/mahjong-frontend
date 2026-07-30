@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!--
+      The tile art (docs/08-graphics-ux.md §3: one sprite sheet, one request). Preloaded so the
+      fetch overlaps the JS instead of queueing behind it — `as="image"` because that is what the
+      browser treats an SVG fetched for `<use>` as, and it is the hint that gets the right priority.
+    -->
+    <link rel="preload" as="image" type="image/svg+xml" href="tiles/traditional.svg" />
   </head>
   <body>
     <mj-root></mj-root>

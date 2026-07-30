@@ -1,0 +1,17 @@
+{
+  "generator": "emit:fixtures",
+  "files": {
+    "chankan.json": "534f590af5114ba47e976e4e177a9aa9abb36f559cadde9267c0ab211e69ad8b",
+    "double_ron.json": "99af693d9af5b979968e33c66b63404f70534b7d5a72614914ec51336f1f84fd",
+    "haitei_houtei.json": "2d466de627004d25e05ab400328842b8dc2fde4b8959f82e5e718e93ebfd698e",
+    "kan_dora.json": "ad3418d1e923a4dc2b03af72849d2cbc4e337da34b44ef45c64f12075821fcc0",
+    "kyuushu_kyuuhai.json": "f2365a5314e3112194eaeff01c36348c126cd86ec35a6aecb8b9aff9001bebd7",
+    "nagashi_mangan.json": "bf5002018fec6c1f99f0d64d90562e3b3809a188efc7c64be5a27e6cd181322d",
+    "rinshan_kaihou.json": "69743d5b6a71650adb502dabc15fd00cb3f3c6819a8aa13cdce495aa1822ed05",
+    "suucha_riichi.json": "372bff86ff546a4c69addd78b886f1efdace81d7f9eb6b8c5cd4a59d9edd79a2",
+    "suufon_renda.json": "2ef12f876690d8bf2a943d90870add051f84f952c62db9a629e82ce1dec1e98b",
+    "suukaikan.json": "82a920a8dae2a0a7c43a84ad0052fac94ab1c714c976396c4c70a5eb4a9e9bee",
+    "triple_ron.json": "2c17a5f520e54af09166fd832cbb1de7329568b64397ecb5ed94a2e09ca6aadd",
+    "yakuman.json": "323f3dfe4c25684ddbaea4a9edabceb930fdeb004f04e0283b9e61c80e411f0c"
+  }
+}

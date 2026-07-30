@@ -1,0 +1,326 @@
+{
+  "situation": "kyuushu_kyuuhai",
+  "note": "nine terminals and honours on the deal",
+  "seed": "probe-7",
+  "handIndex": 0,
+  "mySeat": 0,
+  "snapshot": {
+    "seq": 1,
+    "tableId": "fixture-table",
+    "config": {
+      "profile": "standard",
+      "length": "hanchan",
+      "startingPoints": 25000,
+      "returnPoints": 30000,
+      "uma": [
+        15,
+        5,
+        -5,
+        -15
+      ],
+      "redFives": {
+        "m": 1,
+        "p": 1,
+        "s": 1
+      },
+      "kuitan": true,
+      "kuikae": false,
+      "atozuke": true,
+      "agariYame": true,
+      "tobi": true,
+      "enchousen": true,
+      "nagashiMangan": true,
+      "doubleRon": true,
+      "sanchahouAborts": true,
+      "sekininBarai": true,
+      "kazoeYakuman": true,
+      "doubleYakuman": false,
+      "renhou": "none",
+      "kiriageMangan": false,
+      "chankanOnAnkan": false,
+      "uraDora": true,
+      "kanDora": true,
+      "kanUraDora": true,
+      "ippatsu": true
+    },
+    "round": 0,
+    "kyoku": 1,
+    "honba": 0,
+    "riichiSticks": 0,
+    "dealer": 0,
+    "mySeat": 0,
+    "scores": [
+      25000,
+      25000,
+      25000,
+      25000
+    ],
+    "wallRemaining": 70,
+    "doraIndicators": [
+      "3p"
+    ],
+    "players": [
+      {
+        "seat": 0,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 1",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": [
+          "3m",
+          "5m",
+          "3p",
+          "0p",
+          "7p",
+          "9p",
+          "1s",
+          "1s",
+          "8s",
+          "2z",
+          "4z",
+          "6z",
+          "7z"
+        ],
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      },
+      {
+        "seat": 1,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 2",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": null,
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      },
+      {
+        "seat": 2,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 3",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": null,
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      },
+      {
+        "seat": 3,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 4",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": null,
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      }
+    ],
+    "phase": "awaiting-draw",
+    "turn": 0,
+    "pendingPrompt": null,
+    "lastEventSeq": 1
+  },
+  "steps": [
+    {"t":"event","seq":2,"event":{"t":"draw","seat":0,"tile":"6m","fromRinshan":false,"wallRemaining":69}},
+    {"t":"prompt","options":[{"type":"discard","tile":"3m"},{"type":"discard","tile":"5m"},{"type":"discard","tile":"6m"},{"type":"discard","tile":"3p"},{"type":"discard","tile":"0p"},{"type":"discard","tile":"7p"},{"type":"discard","tile":"9p"},{"type":"discard","tile":"1s"},{"type":"discard","tile":"8s"},{"type":"discard","tile":"2z"},{"type":"discard","tile":"4z"},{"type":"discard","tile":"6z"},{"type":"discard","tile":"7z"}],"answer":{"type":"discard","tile":"2z"}},
+    {"t":"event","seq":3,"event":{"t":"discard","seat":0,"tile":"2z","tsumogiri":false,"riichi":false}},
+    {"t":"event","seq":4,"event":{"t":"draw","seat":1,"tile":null,"fromRinshan":false,"wallRemaining":68}},
+    {"t":"event","seq":5,"event":{"t":"ryuukyoku","reason":"kyuushu_kyuuhai","tenpai":[false,false,false,false],"hands":[null,null,null,null],"scores":[25000,25000,25000,25000],"scoreDeltas":[0,0,0,0]}},
+    {"t":"event","seq":6,"event":{"t":"hand-end","nextDealer":0,"nextHonba":1,"riichiSticks":0}}
+  ],
+  "final": {
+    "seq": 6,
+    "tableId": "fixture-table",
+    "config": {
+      "profile": "standard",
+      "length": "hanchan",
+      "startingPoints": 25000,
+      "returnPoints": 30000,
+      "uma": [
+        15,
+        5,
+        -5,
+        -15
+      ],
+      "redFives": {
+        "m": 1,
+        "p": 1,
+        "s": 1
+      },
+      "kuitan": true,
+      "kuikae": false,
+      "atozuke": true,
+      "agariYame": true,
+      "tobi": true,
+      "enchousen": true,
+      "nagashiMangan": true,
+      "doubleRon": true,
+      "sanchahouAborts": true,
+      "sekininBarai": true,
+      "kazoeYakuman": true,
+      "doubleYakuman": false,
+      "renhou": "none",
+      "kiriageMangan": false,
+      "chankanOnAnkan": false,
+      "uraDora": true,
+      "kanDora": true,
+      "kanUraDora": true,
+      "ippatsu": true
+    },
+    "round": 0,
+    "kyoku": 1,
+    "honba": 1,
+    "riichiSticks": 0,
+    "dealer": 0,
+    "mySeat": 0,
+    "scores": [
+      25000,
+      25000,
+      25000,
+      25000
+    ],
+    "wallRemaining": 68,
+    "doraIndicators": [
+      "3p"
+    ],
+    "players": [
+      {
+        "seat": 0,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 1",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": [
+          "3m",
+          "5m",
+          "6m",
+          "3p",
+          "0p",
+          "7p",
+          "9p",
+          "1s",
+          "1s",
+          "8s",
+          "4z",
+          "6z",
+          "7z"
+        ],
+        "drawn": null,
+        "melds": [],
+        "discards": [
+          {
+            "tile": "2z",
+            "tsumogiri": false,
+            "riichiDeclaration": false,
+            "calledBy": null
+          }
+        ],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      },
+      {
+        "seat": 1,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 2",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 14,
+        "hand": null,
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      },
+      {
+        "seat": 2,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 3",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": null,
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      },
+      {
+        "seat": 3,
+        "player": {
+          "userId": null,
+          "displayName": "Bot (Normal) 4",
+          "avatarId": "bot-normal",
+          "isBot": true,
+          "botLevel": "normal"
+        },
+        "handSize": 13,
+        "hand": null,
+        "drawn": null,
+        "melds": [],
+        "discards": [],
+        "riichi": null,
+        "isTenpaiRevealed": false,
+        "connection": "online",
+        "clockBank": 0
+      }
+    ],
+    "phase": "hand-end",
+    "turn": 1,
+    "pendingPrompt": null,
+    "lastEventSeq": 6
+  }
+}

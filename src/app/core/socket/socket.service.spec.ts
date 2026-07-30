@@ -190,9 +190,31 @@ describe('SocketService', () => {
     expect(handler).toHaveBeenCalledTimes(1);
   });
 
-  it('refuses to emit or subscribe before connecting', () => {
+  it('takes subscriptions before there is a socket, and binds them when there is', () => {
     const service = TestBed.inject(SocketService);
-    expect(() => service.on('lobby:matched', vi.fn())).toThrow(/before connect/);
+    const listener = vi.fn();
+    // A store subscribes once at construction, long before the app connects, and must not have
+    // to resubscribe afterwards — that is one missed edge away from a table that stops updating.
+    service.on('lobby:matched', listener);
+
+    service.connect();
+    created.at(-1)!.fire('lobby:matched', { tableId: 't1' });
+    expect(listener).toHaveBeenCalledWith({ tableId: 't1' });
+  });
+
+  it('rebinds every listener across a reconnect', () => {
+    const service = TestBed.inject(SocketService);
+    const listener = vi.fn();
+    service.connect();
+    service.on('lobby:matched', listener);
+
+    service.reconnect();
+    created.at(-1)!.fire('lobby:matched', { tableId: 't2' });
+    expect(listener).toHaveBeenCalledWith({ tableId: 't2' });
+  });
+
+  it('still refuses to send before connecting', () => {
+    const service = TestBed.inject(SocketService);
     return expect(service.request('lobby:cancel', { ticketId: 't1' })).rejects.toThrow(
       /before connect/,
     );

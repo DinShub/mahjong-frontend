@@ -19,7 +19,8 @@ test.describe('landing', () => {
 
     await expect(page.getByTestId('protocol')).toHaveText('v1');
     await expect(page.getByTestId('server-url')).toHaveText('http://127.0.0.1:3100');
-    await expect(page.getByTestId('session')).toHaveText('guest (unauthenticated)');
+    // M4 authenticates before the handshake, so the socket knows who it is greeting.
+    await expect(page.getByTestId('session')).toHaveText(/^guest-\d+$/);
     await expect(page.getByTestId('error')).toHaveCount(0);
     await expect(page.getByTestId('retry')).toHaveCount(0);
   });
@@ -48,5 +49,40 @@ test.describe('landing', () => {
     await expect(page.getByTestId('connection-label')).toHaveText('Connected');
 
     expect(problems).toEqual([]);
+  });
+});
+
+test.describe('getting in', () => {
+  test('offers a guest a way into the lobby without signing up', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByTestId('play-guest')).toHaveText(/Play as guest/);
+
+    await page.getByTestId('play-guest').click();
+    await expect(page).toHaveURL(/\/lobby$/);
+    await expect(page.getByTestId('lobby-user')).toContainText('Guest-');
+  });
+
+  test('upgrades the guest rather than making a second account', async ({ page }) => {
+    await page.goto('/');
+    await page.getByTestId('show-register').click();
+
+    await page.getByTestId('email').fill('kaori@example.test');
+    await page.getByTestId('password').fill('correct horse battery staple');
+    await page.getByTestId('display-name').fill('Kaori');
+    await page.getByTestId('auth-submit').click();
+
+    await expect(page).toHaveURL(/\/lobby$/);
+    await expect(page.getByTestId('lobby-user')).toContainText('Kaori');
+  });
+
+  test('says what is wrong when a sign-in is refused', async ({ page }) => {
+    await page.goto('/');
+    await page.getByTestId('show-login').click();
+
+    await page.getByTestId('email').fill('nobody@example.test');
+    await page.getByTestId('password').fill('short');
+    await page.getByTestId('auth-submit').click();
+
+    await expect(page.getByTestId('auth-error')).toContainText('do not match');
   });
 });

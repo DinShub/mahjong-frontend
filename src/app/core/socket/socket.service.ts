@@ -15,6 +15,11 @@ import type { AckOf, ConnectionStatus, GameSocket, PayloadOf } from './socket.ty
 
 const ACK_TIMEOUT_MS = 10_000;
 
+/** Weight of the newest round-trip sample. Low enough that one slow ack is not "the connection". */
+const RTT_SMOOTHING = 0.25;
+
+type Listener = (...args: never[]) => void;
+
 /**
  * Typed socket.io wrapper.
  *
@@ -22,8 +27,11 @@ const ACK_TIMEOUT_MS = 10_000;
  * the handshake, the reconnect policy and the connection state. State is signals — the app has no
  * client-side business logic to justify a reducer stack (`docs/07-frontend.md` §1).
  *
- * M0 covers the handshake. Table routing, the event queue, prompts and resync land in M4; the
- * `emit`/`request`/`on` surface below is what they build on.
+ * **Listeners are registered against the service, not the socket.** A store subscribes once, at
+ * construction, and keeps receiving events across every reconnect and every token change; the
+ * registry below is re-bound to each new underlying socket. The alternative — every store
+ * resubscribing on every `connect` — is one missed edge away from a table that silently stops
+ * updating.
  */
 @Injectable({ providedIn: 'root' })
 export class SocketService implements OnDestroy {
@@ -32,17 +40,24 @@ export class SocketService implements OnDestroy {
 
   private socket: GameSocket | null = null;
   private accessToken: string | null = null;
+  private readonly listeners = new Map<string, Set<Listener>>();
 
   private readonly _status = signal<ConnectionStatus>('idle');
   private readonly _hello = signal<SessionHelloPayload | null>(null);
   private readonly _lastError = signal<ProtocolError | null>(null);
   private readonly _attempts = signal(0);
+  private readonly _rttMs = signal<number | null>(null);
+  private readonly _demoted = signal(false);
 
   readonly status = this._status.asReadonly();
   /** The server's greeting; `null` until the handshake completes. */
   readonly hello = this._hello.asReadonly();
   readonly lastError = this._lastError.asReadonly();
   readonly reconnectAttempts = this._attempts.asReadonly();
+  /** Smoothed round-trip time, from acknowledgement timings. `null` until the client acts. */
+  readonly rttMs = this._rttMs.asReadonly();
+  /** This tab was demoted by a newer one and may watch but not act. */
+  readonly demoted = this._demoted.asReadonly();
 
   /** Connected *and* greeted — a transport-level connection alone is not a usable session. */
   readonly isConnected = computed(() => this._status() === 'connected' && this._hello() !== null);
@@ -58,9 +73,20 @@ export class SocketService implements OnDestroy {
 
   private helloReceivedAt = 0;
 
-  /** Set before {@link connect}; M3 issues real tokens. */
+  constructor() {
+    this.on('session:demoted', () => {
+      this._demoted.set(true);
+    });
+  }
+
+  /**
+   * Set the credential the handshake carries. Changing it while connected reconnects, because a
+   * socket authenticated as a guest keeps believing it after that guest upgrades to an account.
+   */
   setAccessToken(token: string | null): void {
+    if (this.accessToken === token) return;
     this.accessToken = token;
+    if (this.socket !== null) this.reconnect();
   }
 
   connect(): void {
@@ -68,6 +94,7 @@ export class SocketService implements OnDestroy {
 
     this._status.set('connecting');
     this._lastError.set(null);
+    this._demoted.set(false);
 
     const url = resolveUrl(this.config.socketUrl, globalThis.location?.origin ?? '');
     const socket = this.createSocket(url, {
@@ -116,6 +143,8 @@ export class SocketService implements OnDestroy {
         socket.disconnect();
       }
     });
+
+    this.bindRegistered(socket);
   }
 
   disconnect(): void {
@@ -130,34 +159,35 @@ export class SocketService implements OnDestroy {
     this.disconnect();
     this._status.set('idle');
     this._attempts.set(0);
+    this._demoted.set(false);
     this.connect();
   }
 
-  /** Subscribe to a server event. Returns an unsubscribe function. */
+  /**
+   * Subscribe to a server event. Returns an unsubscribe function.
+   *
+   * Safe before {@link connect} and across reconnects: the registry outlives the socket.
+   */
   on<E extends keyof ServerToClientEvents>(
     event: E,
     listener: ServerToClientEvents[E],
   ): () => void {
-    const socket = this.socket;
-    if (socket === null) throw new Error('SocketService.on called before connect()');
+    const handler = listener as Listener;
+    const set = this.listeners.get(event) ?? new Set<Listener>();
+    set.add(handler);
+    this.listeners.set(event, set);
+    bridge(this.socket)?.on(event, handler);
 
-    // socket.io types listeners as a conditional over the *concrete* event name, which a generic
-    // `E` cannot satisfy. The signature above is exact for callers; the imprecision stops here.
-    const bridge = socket as unknown as {
-      on(event: string, listener: (...args: never[]) => void): void;
-      off(event: string, listener: (...args: never[]) => void): void;
-    };
-    const handler = listener as (...args: never[]) => void;
-
-    bridge.on(event, handler);
     return () => {
-      bridge.off(event, handler);
+      set.delete(handler);
+      bridge(this.socket)?.off(event, handler);
     };
   }
 
   /**
    * Send an event and wait for its acknowledgement. Every client→server event acknowledges, so
-   * failures come back typed instead of as a correlated error event.
+   * failures come back typed instead of as a correlated error event. The round trip doubles as the
+   * client's only honest RTT sample.
    */
   async request<E extends keyof ClientToServerEvents>(
     event: E,
@@ -168,10 +198,45 @@ export class SocketService implements OnDestroy {
     const emitter = socket.timeout(ACK_TIMEOUT_MS) as unknown as {
       emitWithAck: (event: E, payload: PayloadOf<E>) => Promise<AckOf<E>>;
     };
-    return emitter.emitWithAck(event, payload);
+    const started = Date.now();
+    try {
+      return await emitter.emitWithAck(event, payload);
+    } finally {
+      this.sampleRtt(Date.now() - started);
+    }
+  }
+
+  private sampleRtt(sample: number): void {
+    // A timed-out ack is not a round trip; folding it in would peg the estimate at the timeout.
+    if (sample >= ACK_TIMEOUT_MS) return;
+    this._rttMs.update((current) =>
+      current === null ? sample : Math.round(current + RTT_SMOOTHING * (sample - current)),
+    );
+  }
+
+  private bindRegistered(socket: GameSocket): void {
+    const target = bridge(socket);
+    if (target === null) return;
+    for (const [event, set] of this.listeners) {
+      for (const handler of set) target.on(event, handler);
+    }
   }
 
   ngOnDestroy(): void {
     this.disconnect();
   }
+}
+
+/**
+ * socket.io types listeners as a conditional over the *concrete* event name, which a generic `E`
+ * cannot satisfy. The public signatures above are exact for callers; the imprecision stops here.
+ */
+function bridge(socket: GameSocket | null): {
+  on(event: string, listener: Listener): void;
+  off(event: string, listener: Listener): void;
+} | null {
+  return socket as unknown as {
+    on(event: string, listener: Listener): void;
+    off(event: string, listener: Listener): void;
+  } | null;
 }
