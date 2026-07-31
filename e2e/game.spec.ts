@@ -8,6 +8,7 @@ import {
   myPond,
   playToResult,
   playUntil,
+  pushWaits,
   selectableTiles,
   startGame,
   useFixture,
@@ -371,5 +372,50 @@ test.describe('leaving', () => {
 
     await expect(page.getByTestId('leave-confirm')).toBeHidden();
     await expect(page).toHaveURL(/\/game\//);
+  });
+});
+
+/**
+ * The wait strip.
+ *
+ * `PlayerView.myWaits` is pushed by the server (`game:waits`) because the client is not allowed to
+ * work out whether a wait exists — so the strip is driven from the mock rather than by playing a
+ * recorded hand until it happens to reach tenpai, which would be a test of the fixture.
+ */
+test.describe('tenpai waits', () => {
+  test('shows the winning tiles, and greys the ones already discarded', async ({
+    page,
+    request,
+  }) => {
+    await useFixture(request, 'chankan');
+    await startGame(page);
+
+    const strip = page.getByTestId('waits').or(page.getByTestId('portrait-waits'));
+    await expect(strip).toHaveCount(0);
+
+    await pushWaits(request, { tiles: ['3s', '6s'] });
+    await expect(strip).toBeVisible();
+    await expect(strip).toContainText('Waiting on');
+    await expect(strip).not.toHaveClass(/furiten/);
+
+    await pushWaits(request, { tiles: ['3s', '6s'], inMyDiscards: ['3s'], furiten: true });
+    await expect(strip).toContainText('Furiten');
+    await expect(strip).toHaveClass(/furiten/);
+    // The discarded wait is greyed; the other is not.
+    await expect(page.locator('[data-testid$="waits-3s"]')).toHaveClass(/dimmed/);
+    await expect(page.locator('[data-testid$="waits-6s"]')).not.toHaveClass(/dimmed/);
+  });
+
+  test('disappears when the hand stops being tenpai', async ({ page, request }) => {
+    await useFixture(request, 'chankan');
+    await startGame(page);
+
+    const strip = page.getByTestId('waits').or(page.getByTestId('portrait-waits'));
+    await pushWaits(request, { tiles: ['1p'] });
+    await expect(strip).toBeVisible();
+
+    // An empty wait list is "not tenpai", not "a strip with nothing in it".
+    await pushWaits(request, { tiles: [] });
+    await expect(strip).toHaveCount(0);
   });
 });

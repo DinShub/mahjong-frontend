@@ -9,6 +9,7 @@ import type { GameSummary } from '@contracts/stats';
 
 import { SettingsService } from '@core/settings/settings.service';
 
+import { BackLinkComponent } from '@shared/nav/back-link.component';
 import { YAKU_NAMES, yakuName } from '@shared/yaku/yaku-names';
 
 import { ProfileStore } from './profile.store';
@@ -31,11 +32,12 @@ const TOP_YAKU = 8;
 @Component({
   selector: 'mj-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, DecimalPipe, PercentPipe, RouterLink],
+  imports: [BackLinkComponent, DatePipe, DecimalPipe, PercentPipe, RouterLink],
   providers: [ProfileStore],
   host: { class: 'mj-profile', '[attr.data-testid]': '"profile"' },
   template: `
     <main>
+      <mj-back-link />
       @if (store.error(); as message) {
         <p class="error" role="alert" data-testid="profile-error">{{ message }}</p>
       } @else if (store.loading()) {

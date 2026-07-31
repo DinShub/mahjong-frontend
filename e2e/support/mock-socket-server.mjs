@@ -244,6 +244,24 @@ const http = createServer((request, response) => {
     return;
   }
 
+  // [M5] Push a `game:waits` to every connected client. The strip is driven by a server push that
+  // the client cannot derive, so a test needs a way to make the server say something specific —
+  // waiting for a recorded hand to happen to reach tenpai would test the fixture, not the client.
+  if (url.pathname === '/control/waits' && request.method === 'POST') {
+    void readBody(request).then((body) => {
+      io.emit('game:waits', {
+        seq: Number(body.seq ?? 1),
+        waits: {
+          tiles: body.tiles ?? [],
+          inMyDiscards: body.inMyDiscards ?? [],
+          furiten: body.furiten === true,
+        },
+      });
+      send(response, 200, { ok: true });
+    });
+    return;
+  }
+
   if (url.pathname === '/control/afk' && request.method === 'POST') {
     void readBody(request).then((body) => {
       io.emit('player:afk', { seat: Number(body.seat ?? 0), takenOverByBot: true });
@@ -255,6 +273,16 @@ const http = createServer((request, response) => {
   // -------------------------------------------------------------------------
   // [M5] The read surface: stats, history, replay.
   // -------------------------------------------------------------------------
+
+  // `me` needs a bearer token, exactly as the server does. Answering it unconditionally is how the
+  // mock certified a profile page that could not load: the real route resolves `me` out of
+  // `request.user`, and it had no guard to populate it.
+  const bearer = /^Bearer .+/.test(request.headers.authorization ?? '');
+  const wantsMe = url.pathname === '/stats/me' || url.pathname.startsWith('/users/me/');
+  if (wantsMe && !bearer) {
+    send(response, 401, { code: 'UNAUTHENTICATED', message: 'me requires a token' });
+    return;
+  }
 
   if (url.pathname === '/stats/me' || /^\/users\/[^/]+\/profile$/.test(url.pathname)) {
     send(response, 200, statsProfile());

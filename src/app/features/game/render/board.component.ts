@@ -9,6 +9,7 @@ import { CentrePanelComponent } from './centre-panel.component';
 import type { HandTile } from './hand.component';
 import { PondComponent } from './pond.component';
 import { SeatZoneComponent } from './seat-zone.component';
+import { WaitsComponent } from './waits.component';
 import { doraKinds } from '../state/dora';
 import { SEAT_POSITIONS, posName, seatToPos } from '../state/seat-position';
 import type { SeatPos } from '../state/seat-position';
@@ -35,7 +36,7 @@ interface PlacedSeat {
 @Component({
   selector: 'mj-board',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CentrePanelComponent, PondComponent, SeatZoneComponent],
+  imports: [CentrePanelComponent, PondComponent, SeatZoneComponent, WaitsComponent],
   host: { class: 'mj-board', '[attr.data-testid]': '"board"' },
   template: `
     @for (placed of seats(); track placed.seat.seat) {
@@ -62,6 +63,12 @@ interface PlacedSeat {
         [ura]="uraIndicators()"
       />
     </div>
+
+    @if (myWaits(); as waits) {
+      <div class="slot waits-slot">
+        <mj-waits [waits]="waits" testId="waits" />
+      </div>
+    }
 
     @for (placed of seats(); track placed.seat.seat) {
       <div class="slot zone-slot" [style]="placed.zoneStyle" [attr.data-pos]="placed.pos">
@@ -103,6 +110,18 @@ interface PlacedSeat {
     .pond-slot {
       place-items: start center;
     }
+
+    /*
+      Above the player's own hand and clear of it: the hand occupies the bottom band, and the wait
+      strip has to be readable without covering the tiles the player is choosing between.
+    */
+    .waits-slot {
+      inset-inline-start: 0;
+      inset-inline-end: 0;
+      inset-block-end: 168px;
+      place-items: center;
+      pointer-events: none;
+    }
   `,
 })
 export class BoardComponent {
@@ -123,6 +142,12 @@ export class BoardComponent {
   protected readonly centreStyle = boxStyle(CENTRE_BOX);
 
   protected readonly dora = computed(() => doraKinds(this.view().doraIndicators));
+
+  /** Shown only when the seat is actually tenpai; an empty wait list is not a strip with nothing in it. */
+  protected readonly myWaits = computed(() => {
+    const waits = this.view().myWaits;
+    return waits === null || waits.tiles.length === 0 ? null : waits;
+  });
 
   protected readonly playerNames = computed(() =>
     this.view().players.map((seat) => seat.player.displayName),

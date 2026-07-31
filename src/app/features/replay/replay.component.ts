@@ -11,6 +11,8 @@ import { BoardPortraitComponent } from '@features/game/render/board-portrait.com
 import { BoardComponent } from '@features/game/render/board.component';
 import { StageComponent } from '@features/game/render/stage.component';
 
+import { BackLinkComponent } from '@shared/nav/back-link.component';
+
 import { ReplayStore, SPEEDS } from './replay.store';
 import type { ReplaySpeed, ReplayViewer } from './replay.store';
 import { verifyReplay } from './verify-seed';
@@ -35,6 +37,7 @@ import type { SeedVerdict } from './verify-seed';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AgariOverlayComponent,
+    BackLinkComponent,
     BoardComponent,
     BoardPortraitComponent,
     RyuukyokuOverlayComponent,
@@ -173,6 +176,8 @@ import type { SeedVerdict } from './verify-seed';
               </button>
             }
           </div>
+
+          <mj-back-link class="back" />
 
           <button
             type="button"
@@ -334,8 +339,12 @@ import type { SeedVerdict } from './verify-seed';
       color: var(--mj-accent-ink);
     }
 
-    .verify {
+    .back {
       margin-inline-start: auto;
+    }
+
+    .verify {
+      margin-inline-start: 0;
     }
 
     .verdict {

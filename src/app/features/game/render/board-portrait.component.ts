@@ -10,6 +10,7 @@ import type { HandTile } from './hand.component';
 import { MeldsComponent } from './melds.component';
 import { NameplateComponent } from './nameplate.component';
 import { PondComponent } from './pond.component';
+import { WaitsComponent } from './waits.component';
 import { doraKinds } from '../state/dora';
 import {
   POS_LEFT,
@@ -41,7 +42,14 @@ interface OpponentCard {
 @Component({
   selector: 'mj-board-portrait',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CentrePanelComponent, HandComponent, MeldsComponent, NameplateComponent, PondComponent],
+  imports: [
+    CentrePanelComponent,
+    HandComponent,
+    MeldsComponent,
+    NameplateComponent,
+    PondComponent,
+    WaitsComponent,
+  ],
   host: { class: 'mj-board-portrait', '[attr.data-testid]': '"board-portrait"' },
   template: `
     <header class="opponents">
@@ -140,6 +148,9 @@ interface OpponentCard {
     </section>
 
     <footer class="self">
+      @if (myWaits(); as waits) {
+        <mj-waits [waits]="waits" testId="portrait-waits" />
+      }
       <div class="self-top">
         @if (me(); as mine) {
           <mj-melds
@@ -309,6 +320,12 @@ export class BoardPortraitComponent {
   protected readonly pondsExpanded = signal(false);
 
   protected readonly dora = computed(() => doraKinds(this.view().doraIndicators));
+
+  /** See the landscape board: shown only when the seat is tenpai. */
+  protected readonly myWaits = computed(() => {
+    const waits = this.view().myWaits;
+    return waits === null || waits.tiles.length === 0 ? null : waits;
+  });
 
   protected readonly me = computed<PlayerViewSeat | null>(() => {
     const view = this.view();

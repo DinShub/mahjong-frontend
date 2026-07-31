@@ -154,7 +154,12 @@
     "phase": "awaiting-draw",
     "turn": 0,
     "pendingPrompt": null,
-    "lastEventSeq": 1
+    "lastEventSeq": 1,
+    "myWaits": {
+      "tiles": [],
+      "inMyDiscards": [],
+      "furiten": false
+    }
   },
   "steps": [
     {"t":"event","seq":2,"event":{"t":"draw","seat":0,"tile":null,"fromRinshan":false,"wallRemaining":69}},
@@ -598,6 +603,11 @@
     "phase": "hand-end",
     "turn": 0,
     "pendingPrompt": null,
-    "lastEventSeq": 65
+    "lastEventSeq": 65,
+    "myWaits": {
+      "tiles": [],
+      "inMyDiscards": [],
+      "furiten": false
+    }
   }
 }

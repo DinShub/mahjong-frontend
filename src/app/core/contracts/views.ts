@@ -79,6 +79,34 @@ export interface PlayerViewSeat {
   clockBank: number;
 }
 
+/**
+ * What the viewer's own hand is waiting on.
+ *
+ * **[M5 addition]** — `docs/07-frontend.md` §1 puts every rules judgement on the server: *"It does
+ * not compute what's legal, what a hand is worth, or whether a wait exists. Every one of those
+ * comes from the server."* The one exception it allows is a WASM copy of the engine in practice
+ * mode, which does not exist, so a client that worked its own waits out would be the second engine
+ * this project has refused to build three times.
+ *
+ * It discloses nothing. A seat's waits follow from its own concealed hand and its own discards,
+ * both of which the viewer already holds; `null` for a spectator, who holds neither.
+ */
+export interface WaitView {
+  /** Tiles that complete the hand, ascending. Empty when the hand is not tenpai. */
+  tiles: TileStr[];
+  /**
+   * The subset of `tiles` the viewer has already discarded — the reason they are furiten, and the
+   * tiles a UI greys out.
+   */
+  inMyDiscards: TileStr[];
+  /**
+   * Ron is blocked on **every** wait, not only the discarded ones: furiten is a property of the
+   * hand. Tsumo is unaffected. True for temporary and riichi furiten too, which is why this is not
+   * simply `inMyDiscards.length > 0`.
+   */
+  furiten: boolean;
+}
+
 export interface PlayerView {
   seq: number;
   tableId: string;
@@ -99,6 +127,8 @@ export interface PlayerView {
   turn: Seat;
   pendingPrompt: Prompt | null;
   lastEventSeq: number;
+  /** The viewer's own waits. `null` for a spectator. See {@link WaitView}. */
+  myWaits: WaitView | null;
 }
 
 // ---------------------------------------------------------------------------

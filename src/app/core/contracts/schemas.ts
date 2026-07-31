@@ -413,6 +413,12 @@ export const playerViewSeatSchema = z.object({
   clockBank: z.number().int().min(0),
 });
 
+export const waitViewSchema = z.object({
+  tiles: z.array(tileStrSchema),
+  inMyDiscards: z.array(tileStrSchema),
+  furiten: z.boolean(),
+});
+
 export const playerViewSchema = z.object({
   seq: z.number().int().min(0),
   tableId: objectIdSchema,
@@ -431,6 +437,7 @@ export const playerViewSchema = z.object({
   turn: seatSchema,
   pendingPrompt: promptSchema.nullable(),
   lastEventSeq: z.number().int().min(0),
+  myWaits: waitViewSchema.nullable(),
 });
 
 export const tableSeatStateSchema = z.object({
@@ -749,6 +756,7 @@ export const SCHEMA_REGISTRY = {
   ServerGameEvent: serverGameEventSchema,
   PlayerViewSeat: playerViewSeatSchema,
   PlayerView: playerViewSchema,
+  WaitView: waitViewSchema,
   TableSeatState: tableSeatStateSchema,
   TableState: tableStateSchema,
   HandshakeAuth: handshakeAuthSchema,

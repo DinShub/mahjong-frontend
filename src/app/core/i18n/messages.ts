@@ -34,6 +34,9 @@ const JA: MessageCatalogue = {
   'lobby.title': 'ロビー',
   'nav.profile': 'プロフィール',
   'nav.settings': '設定',
+  'nav.back': '戻る',
+  'waits.waiting': '待ち',
+  'waits.furiten': 'フリテン — ロンできません',
 
   // Profile
   'profile.placements': '着順',

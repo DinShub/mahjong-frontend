@@ -145,3 +145,12 @@ export async function playToResult(page: Page, maxPrompts = 40): Promise<void> {
   await playUntil(page, overlay, maxPrompts);
   await expect(overlay.first()).toBeVisible({ timeout: 20_000 });
 }
+
+/** Make the mock push a `game:waits`. See `/control/waits` in the mock server. */
+export async function pushWaits(
+  request: APIRequestContext,
+  waits: { tiles: string[]; inMyDiscards?: string[]; furiten?: boolean },
+): Promise<void> {
+  const response = await request.post(`${MOCK_URL}/control/waits`, { data: waits });
+  expect(response.ok()).toBe(true);
+}

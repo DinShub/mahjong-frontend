@@ -1,18 +1,18 @@
 {
   "generator": "emit:fixtures",
   "files": {
-    "chankan.json": "534f590af5114ba47e976e4e177a9aa9abb36f559cadde9267c0ab211e69ad8b",
-    "double_ron.json": "99af693d9af5b979968e33c66b63404f70534b7d5a72614914ec51336f1f84fd",
-    "haitei_houtei.json": "2d466de627004d25e05ab400328842b8dc2fde4b8959f82e5e718e93ebfd698e",
-    "kan_dora.json": "ad3418d1e923a4dc2b03af72849d2cbc4e337da34b44ef45c64f12075821fcc0",
-    "kyuushu_kyuuhai.json": "f2365a5314e3112194eaeff01c36348c126cd86ec35a6aecb8b9aff9001bebd7",
-    "nagashi_mangan.json": "bf5002018fec6c1f99f0d64d90562e3b3809a188efc7c64be5a27e6cd181322d",
+    "chankan.json": "e059574b6e2b3f2652063793f506df88c560cb2adc5753c206e4b54107efb497",
+    "double_ron.json": "45b4af116c165cec61cf20750091b25139e1d70e0f7eb29e1ed79976644e5693",
+    "haitei_houtei.json": "9d6df6dd7925468112aab1f3e003a40a2edc57d09388526cdddaf01bc061c88d",
+    "kan_dora.json": "17e82d709a4df9b3518e430a3d848a27d8ab907cf228d64672b89cee999e9164",
+    "kyuushu_kyuuhai.json": "6ab53494ac8c311efff4a2443803a3d12632722f44385d364e392eb2973765f1",
+    "nagashi_mangan.json": "22c7ed9ef64fcaccb35b90122800ab10c6e5222f512de4c9ad4bc72e0e6bc5e3",
     "replay.json": "1126c52e214b192a373ea8337eacfd303834c611e257ecadc1029d3680f44a26",
-    "rinshan_kaihou.json": "69743d5b6a71650adb502dabc15fd00cb3f3c6819a8aa13cdce495aa1822ed05",
-    "suucha_riichi.json": "372bff86ff546a4c69addd78b886f1efdace81d7f9eb6b8c5cd4a59d9edd79a2",
-    "suufon_renda.json": "2ef12f876690d8bf2a943d90870add051f84f952c62db9a629e82ce1dec1e98b",
-    "suukaikan.json": "82a920a8dae2a0a7c43a84ad0052fac94ab1c714c976396c4c70a5eb4a9e9bee",
-    "triple_ron.json": "2c17a5f520e54af09166fd832cbb1de7329568b64397ecb5ed94a2e09ca6aadd",
-    "yakuman.json": "323f3dfe4c25684ddbaea4a9edabceb930fdeb004f04e0283b9e61c80e411f0c"
+    "rinshan_kaihou.json": "073db3a62042ffe0ff40531d433d3cd4b1662d34883ef13becb35031c6ba5a54",
+    "suucha_riichi.json": "d663e29119ee9d22701aca35441ce32a6d2c3394e2a7da83230fd2eb4f3b6468",
+    "suufon_renda.json": "86c1d86a431f6527dfcdeaafac1a16714a36300a9d935b5d85deaf658a859f2d",
+    "suukaikan.json": "327f15bc309f8a515145a919a844ad68a45598e0d25315e07becde4ca3a2b7b5",
+    "triple_ron.json": "955af2f40c17a3d62862974e7ce0806d2e34c7ef729cacd8f0b7e20b53cf514c",
+    "yakuman.json": "add6fbb891aa7d1e4ace887ff4856726aae5ab981200245e4e54329c9a23e689"
   }
 }

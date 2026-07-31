@@ -19,7 +19,7 @@
 
 import type { GameEvent, GameLength, Placement, PlayerInfo, RuleConfig, Seat } from './actions.js';
 import type { ClientAction } from './actions.js';
-import type { PlayerView, Prompt, SeatConfig, TableState } from './views.js';
+import type { PlayerView, Prompt, SeatConfig, TableState, WaitView } from './views.js';
 
 /**
  * Bumped on any breaking protocol change. There is no backward-compatibility window in v1:
@@ -207,6 +207,13 @@ export interface GameStartedPayload {
 
 export type PromptCancelReason = 'resolved' | 'superseded' | 'timeout' | 'hand-ended';
 
+/** **[M5 addition]** See `'game:waits'`. */
+export interface GameWaitsPayload {
+  /** The event seq this state is true as of, so a client can order it against its event queue. */
+  seq: number;
+  waits: WaitView;
+}
+
 export interface GamePromptCancelledPayload {
   promptId: string;
   reason: PromptCancelReason;
@@ -289,6 +296,17 @@ export interface ServerToClientEvents {
   'game:event': (payload: ServerEvent<GameEvent>) => void;
   'game:prompt': (payload: Prompt) => void;
   'game:promptCancelled': (payload: GamePromptCancelledPayload) => void;
+  /**
+   * **[M5 addition]** The recipient's own waits changed.
+   *
+   * `PlayerView.myWaits` cannot be folded from events — the client is not allowed to work out
+   * whether a wait exists (`docs/07-frontend.md` §1) — so it has to be pushed, and a whole
+   * snapshot after every discard would be several kilobytes to move a two-tile list.
+   *
+   * Sent only to the seat it is about, and only when the value actually changes. That is not an
+   * optimisation but the privacy rule: a seat's waits are derived from its own concealed hand.
+   */
+  'game:waits': (payload: GameWaitsPayload) => void;
   'game:snapshot': (payload: GameSnapshotPayload) => void;
   'game:ended': (payload: GameEndedPayload) => void;
   'game:stamp': (payload: GameStampBroadcastPayload) => void;

@@ -233,6 +233,18 @@ export class GameStore {
         if (this._prompt()?.promptId === payload.promptId) this._prompt.set(null);
       }),
 
+      /**
+       * The seat's own waits.
+       *
+       * Applied straight to the view rather than through the event queue. The queue exists to pace
+       * *other people's* moves so they can be watched; this is a fact about the player's own hand,
+       * which they already know, so holding it back behind a dwell would only make the strip lag
+       * the tile they just discarded.
+       */
+      this.socket.on('game:waits', (payload) => {
+        this._view.update((view) => (view === null ? view : { ...view, myWaits: payload.waits }));
+      }),
+
       this.socket.on('game:ended', (payload) => {
         // The lobby-level event and the engine's own `game-end` both carry placements and the
         // seed; only this one carries rating changes, so it wins where they overlap.

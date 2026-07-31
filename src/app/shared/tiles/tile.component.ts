@@ -243,6 +243,15 @@ export class TileComponent {
   readonly selected = input(false);
   readonly disabled = input(false);
   readonly dimmed = input(false);
+  /**
+   * Draw in a specific set rather than the player's.
+   *
+   * For the settings screen's tile-set picker and nothing else: both previews rendered in the
+   * *selected* set, so the two options looked identical and the control could not be used to
+   * choose between them. Everywhere else this stays unset and the tile follows the setting, which
+   * is what keeps one preference in charge of every tile on the board.
+   */
+  readonly set = input<TileSet | null>(null);
   readonly interactive = input(false);
   /** The dora wedge. Set by the hand, which is the only place that knows the indicators. */
   readonly marker = input(false);
@@ -256,7 +265,7 @@ export class TileComponent {
    * always in the document — rather than 136 blank slabs.
    */
   protected readonly activeSet = computed<TileSet>(() => {
-    const chosen = this.settings.tileSet();
+    const chosen = this.set() ?? this.settings.tileSet();
     return this.sprite.failed().includes(chosen) ? FALLBACK_TILE_SET : chosen;
   });
 

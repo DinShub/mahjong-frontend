@@ -12,6 +12,7 @@ import type {
 import type { Locale } from '@core/i18n/locale';
 import { SoundService } from '@core/sound/sound.service';
 
+import { BackLinkComponent } from '@shared/nav/back-link.component';
 import { TileComponent } from '@shared/tiles/tile.component';
 
 /**
@@ -39,11 +40,12 @@ import { TileComponent } from '@shared/tiles/tile.component';
 @Component({
   selector: 'mj-settings',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, TileComponent],
+  imports: [BackLinkComponent, FormsModule, TileComponent],
   host: { class: 'mj-settings', '[attr.data-testid]': '"settings"' },
   template: `
     <main>
       <header>
+        <mj-back-link />
         <h1 i18n="@@settings.title">Settings</h1>
       </header>
 
@@ -87,15 +89,10 @@ import { TileComponent } from '@shared/tiles/tile.component';
                 [attr.data-testid]="'tileset-' + option.value"
                 (click)="settings.set('tileSet', option.value)"
               >
-                <!--
-                  The preview renders in whichever set is *currently* selected: mj-tile reads the
-                  setting rather than taking one as an input. Clicking swaps both previews at once,
-                  which turns out to be the clearer comparison anyway — the two sets differ in
-                  legibility, and seeing the same three tiles change is what shows that.
-                -->
+                <!-- Each option previews *its own* set, so the choice can be made by looking. -->
                 <span class="preview">
                   @for (tile of previewTiles; track tile) {
-                    <mj-tile [tile]="tile" size="meld" />
+                    <mj-tile [tile]="tile" size="meld" [set]="option.value" />
                   }
                 </span>
                 <span>{{ option.label }}</span>
@@ -301,6 +298,12 @@ import { TileComponent } from '@shared/tiles/tile.component';
       padding: 3rem 1.5rem 4rem;
       display: grid;
       gap: 1.25rem;
+    }
+
+    header {
+      display: grid;
+      justify-items: start;
+      gap: 0.75rem;
     }
 
     h1 {

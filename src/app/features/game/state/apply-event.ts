@@ -358,5 +358,8 @@ export function viewFromGameStart(
     turn: 0,
     pendingPrompt: null,
     lastEventSeq: 0,
+    // Waits are pushed by the server (`game:waits`), never folded: the client is not allowed to
+    // work out whether a wait exists. A view built from `game-start` has not been told yet.
+    myWaits: null,
   };
 }
