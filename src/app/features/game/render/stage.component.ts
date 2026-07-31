@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import type { OnDestroy } from '@angular/core';
 
 import { ViewportService } from '@core/layout/viewport.service';
 
@@ -11,6 +19,14 @@ import { ViewportService } from '@core/layout/viewport.service';
  *
  * The scale is computed in TypeScript because CSS cannot: `scale()` takes a bare number and
  * `calc(100vw / 1600px)` is not a valid CSS expression.
+ *
+ * **It scales to the box it is given, not to the window.** `ViewportService` measures the viewport,
+ * which is right for the game screen — the board is the whole screen there — and wrong for anything
+ * that gives the stage less than that. M5's replay viewer puts a transport bar under it, and a
+ * stage still scaled for the full viewport had the bottom of the board clipped: the player's own
+ * hand, off-screen, which is the same fault the frame below was added to fix. Measuring the host
+ * makes both cases the same case, and leaves the game screen's numbers untouched because there the
+ * host *is* the viewport.
  */
 @Component({
   selector: 'mj-stage',
@@ -57,21 +73,56 @@ import { ViewportService } from '@core/layout/viewport.service';
     }
   `,
 })
-export class StageComponent {
+export class StageComponent implements OnDestroy {
   private readonly viewport = inject(ViewportService);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /** The host's own box. `null` until the first observation, and wherever there is no observer. */
+  private readonly box = signal<{ width: number; height: number } | null>(null);
+  private observer: ResizeObserver | null = null;
+
+  /**
+   * `min(boxW/stageW, boxH/stageH)`.
+   *
+   * Falls back to the viewport before the first measurement — and in jsdom, which has no
+   * `ResizeObserver` — so the value is never `NaN` and the first paint is never unscaled.
+   */
+  private readonly fitted = computed(() => {
+    const box = this.box();
+    if (box === null || box.width <= 0 || box.height <= 0) return this.viewport.scale();
+    return Math.min(
+      box.width / this.viewport.stageWidth(),
+      box.height / this.viewport.stageHeight(),
+    );
+  });
+
+  constructor() {
+    const Observer = globalThis.ResizeObserver;
+    if (Observer === undefined) return;
+    this.observer = new Observer((entries) => {
+      const rect = entries[0]?.contentRect;
+      if (rect !== undefined) this.box.set({ width: rect.width, height: rect.height });
+    });
+    this.observer.observe(this.host.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+    this.observer = null;
+  }
 
   protected readonly surfaceStyle = computed(() => ({
     width: `${String(this.viewport.stageWidth())}px`,
     height: `${String(this.viewport.stageHeight())}px`,
-    transform: `scale(${String(this.viewport.scale())})`,
+    transform: `scale(${String(this.fitted())})`,
   }));
 
   /** What the stage occupies once scaled — the box the grid centres. */
   protected readonly frameStyle = computed(() => ({
-    width: `${String(this.viewport.stageWidth() * this.viewport.scale())}px`,
-    height: `${String(this.viewport.stageHeight() * this.viewport.scale())}px`,
+    width: `${String(this.viewport.stageWidth() * this.fitted())}px`,
+    height: `${String(this.viewport.stageHeight() * this.fitted())}px`,
   }));
 
   /** Exposed for the visual-regression suite, which asserts the scale rather than eyeballing it. */
-  protected readonly scaleAttr = computed(() => this.viewport.scale().toFixed(4));
+  protected readonly scaleAttr = computed(() => this.fitted().toFixed(4));
 }
