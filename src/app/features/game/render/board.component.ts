@@ -69,6 +69,7 @@ interface PlacedSeat {
           [seat]="placed.seat"
           [dealer]="view().dealer"
           [isSelf]="placed.isSelf"
+          [revealAll]="revealAll()"
           [active]="view().turn === placed.seat.seat"
           [interactive]="placed.isSelf && interactive()"
           [selectable]="placed.isSelf ? selectableTiles() : null"
@@ -107,6 +108,8 @@ interface PlacedSeat {
 export class BoardComponent {
   readonly view = input.required<PlayerView>();
   readonly interactive = input(false);
+  /** Replay only: every hand face up. */
+  readonly revealAll = input(false);
   readonly selectableTiles = input<readonly TileStr[] | null>(null);
   readonly selectedSlot = input<number | null>(null);
   readonly deadlineProgress = input<number | null>(null);

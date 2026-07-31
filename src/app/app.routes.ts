@@ -16,7 +16,14 @@ const requiresSession: CanActivateFn = () => {
 
 /**
  * Route-level lazy loading throughout (`docs/07-frontend.md` §2). `game` and `replay` share the
- * render-layer chunk; the replay and profile routes arrive with M5.
+ * render-layer chunk — the replay viewer imports `mj-board`, `mj-stage` and the two result
+ * overlays from `features/game/`, which is what "the same render layer, fed from a fetched log"
+ * means in build terms as well as in design ones.
+ *
+ * `/profile`, `/replay/:gameId` and `/settings` are **not** behind `requiresSession`. A profile and
+ * a finished game's replay are public reads on the server (`docs/06-backend.md` §2), so guarding
+ * them here would only stop someone opening a shared link — and `/settings` writes to
+ * `localStorage`, which a visitor with no account has as much of as anyone.
  */
 export const routes: Routes = [
   {
@@ -39,6 +46,27 @@ export const routes: Routes = [
     path: 'game/:tableId',
     canActivate: [requiresSession],
     loadComponent: () => import('@features/game/game.component').then((m) => m.GameComponent),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('@features/profile/profile.component').then((m) => m.ProfileComponent),
+  },
+  {
+    // `:userId` is bound to the component's input by `withComponentInputBinding`; the route above
+    // leaves it undefined, which the component reads as "me".
+    path: 'profile/:userId',
+    loadComponent: () =>
+      import('@features/profile/profile.component').then((m) => m.ProfileComponent),
+  },
+  {
+    path: 'replay/:gameId',
+    loadComponent: () => import('@features/replay/replay.component').then((m) => m.ReplayComponent),
+  },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('@features/settings/settings.component').then((m) => m.SettingsComponent),
   },
   { path: '**', redirectTo: '' },
 ];

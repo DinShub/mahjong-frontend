@@ -82,3 +82,45 @@ test('lobby', async ({ page }) => {
     animations: 'disabled',
   });
 });
+
+/**
+ * M5's screens.
+ *
+ * The replay is snapshotted at a fixed cursor with a fixed fixture, so it is as still as the board
+ * shots above without needing the mock's `stopAt` — the transport bar is the freeze control.
+ */
+test('profile', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/profile');
+  await expect(page.getByTestId('placement-bars')).toBeVisible();
+
+  await expect(page).toHaveScreenshot('profile.png', {
+    maxDiffPixelRatio: 0.01,
+    animations: 'disabled',
+  });
+});
+
+test('replay viewer', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/replay/000000000000000000000000');
+  await expect(page.getByTestId('replay-transport')).toBeVisible();
+  // A few events in: hands dealt, a discard or two on the table.
+  for (let step = 0; step < 6; step += 1) await page.getByTestId('replay-step').click();
+  await expect(page.getByTestId('replay-position')).toContainText('6/');
+
+  await expect(page).toHaveScreenshot('replay.png', {
+    maxDiffPixelRatio: 0.01,
+    animations: 'disabled',
+  });
+});
+
+test('settings', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/settings');
+  await expect(page.getByTestId('theme-dark')).toBeVisible();
+
+  await expect(page).toHaveScreenshot('settings.png', {
+    maxDiffPixelRatio: 0.01,
+    animations: 'disabled',
+  });
+});

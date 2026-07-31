@@ -17,10 +17,12 @@ import type { TileStr } from '@contracts/tiles';
 import { ViewportService } from '@core/layout/viewport.service';
 import { SettingsService } from '@core/settings/settings.service';
 import { SocketService } from '@core/socket/socket.service';
+import { SoundService } from '@core/sound/sound.service';
 
 import { TileSpriteService } from '@shared/tiles/tile-sprite.service';
 
 import { TableStore } from '../table/table.store';
+import { playGameSounds } from './game-sound';
 import { ActionBarComponent } from './input/action-bar.component';
 import { discardTiles, riichiTiles } from './input/action-slots';
 import { PreSelectionComponent } from './input/pre-selection.component';
@@ -306,6 +308,7 @@ export class GameComponent implements OnDestroy {
   private readonly settings = inject(SettingsService);
   private readonly router = inject(Router);
   private readonly sprite = inject(TileSpriteService);
+  private readonly sound = inject(SoundService);
   private readonly table = inject(TableStore);
 
   /** Bound from the route (`withComponentInputBinding`). */
@@ -334,6 +337,7 @@ export class GameComponent implements OnDestroy {
   constructor() {
     this.sprite.install();
     this.viewport.measure();
+    playGameSounds();
 
     effect(() => {
       const id = this.tableId();
@@ -363,7 +367,18 @@ export class GameComponent implements OnDestroy {
    * one is unacceptable (`docs/07-frontend.md` §3). Experienced players turn on `one-click` and
    * the first click discards.
    */
+  /**
+   * Create the `AudioContext` on the first interaction of the session.
+   *
+   * Browsers refuse to start one outside a user gesture, so this cannot happen at boot. Every
+   * input path funnels through here, and `unlock()` is idempotent and cheap after the first call.
+   */
+  private unlockAudio(): void {
+    this.sound.unlock();
+  }
+
   protected onPick(entry: HandTile): void {
+    this.unlockAudio();
     if (!this.store.canAct() || entry.tile === null || !entry.selectable) return;
     if (this.settings.discardMode() === 'one-click' || this.selectedSlot() === entry.slot) {
       this.discard(entry.tile);
@@ -401,6 +416,7 @@ export class GameComponent implements OnDestroy {
    * if there is nothing to cancel, since `Esc` is also the Pass binding (`docs/07-frontend.md` §3).
    */
   protected onKey(event: KeyboardEvent): void {
+    this.unlockAudio();
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
     const target = event.target as HTMLElement | null;
     if (target !== null && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;

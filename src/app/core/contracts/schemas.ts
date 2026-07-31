@@ -17,6 +17,7 @@ import { z } from 'zod';
 
 import { MELD_TYPES, YAKU_IDS } from './actions.js';
 import { ERROR_CODES, STAMP_IDS } from './protocol.js';
+import { GAME_HISTORY_MAX_PAGE_SIZE } from './stats.js';
 import { ALL_TILE_STRS, TILE_COUNT, TILE_KIND_COUNT } from './tiles.js';
 
 // ---------------------------------------------------------------------------
@@ -580,6 +581,135 @@ export const changePasswordRequestSchema = z.strictObject({
   newPassword: passwordSchema,
 });
 
+// ---------------------------------------------------------------------------
+// Stats, history and replay (`stats.ts`)
+// ---------------------------------------------------------------------------
+
+/**
+ * These are *response* schemas, which is a departure: everything above validates something inbound.
+ * They exist because the frontend validates them on the way in — the same reason the client
+ * validates server events — so a field the server stops sending surfaces as a typed error at the
+ * fetch rather than as `NaN` in a percentage three components deep.
+ */
+export const playerStatsViewSchema = z.object({
+  userId: objectIdSchema,
+  games: z.number().int().min(0),
+  hanchan: z.number().int().min(0),
+  tonpuusen: z.number().int().min(0),
+  placements: z.tuple([
+    z.number().int().min(0),
+    z.number().int().min(0),
+    z.number().int().min(0),
+    z.number().int().min(0),
+  ]),
+  avgPlacement: z.number(),
+  totalNetScore: z.number(),
+  busts: z.number().int().min(0),
+  hands: z.number().int().min(0),
+  wins: z.number().int().min(0),
+  winRate: z.number(),
+  dealIns: z.number().int().min(0),
+  dealInRate: z.number(),
+  tsumoWins: z.number().int().min(0),
+  riichiDeclared: z.number().int().min(0),
+  riichiRate: z.number(),
+  riichiWinRate: z.number(),
+  callRate: z.number(),
+  tenpaiAtDraw: z.number().int().min(0),
+  drawsPlayed: z.number().int().min(0),
+  avgWinPoints: z.number(),
+  avgDealInPoints: z.number(),
+  avgWinTurn: z.number(),
+  yakuCounts: z.record(z.string(), z.number().int().min(0)),
+  yakumanCount: z.number().int().min(0),
+  updatedAt: z.iso.datetime(),
+});
+
+export const userProfileSchema = z.object({
+  userId: objectIdSchema,
+  displayName: z.string(),
+  avatarId: z.string(),
+  isGuest: z.boolean(),
+  createdAt: z.iso.datetime(),
+  stats: playerStatsViewSchema,
+});
+
+export const gameSummaryPlayerSchema = z.object({
+  seat: seatSchema,
+  userId: objectIdSchema.nullable(),
+  displayName: z.string(),
+  avatarId: z.string(),
+  isBot: z.boolean(),
+  botLevel: z.string().nullable(),
+  finalScore: scoreSchema.nullable(),
+  placement: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).nullable(),
+  netScore: z.number().nullable(),
+});
+
+export const gameSummarySchema = z.object({
+  gameId: objectIdSchema,
+  status: z.enum(['in_progress', 'finished', 'abandoned']),
+  length: gameLengthSchema,
+  isPrivate: z.boolean(),
+  hands: z.number().int().min(0),
+  players: z.array(gameSummaryPlayerSchema),
+  seat: seatSchema.nullable(),
+  seedHash: z.string(),
+  seed: z.string().nullable(),
+  startedAt: z.iso.datetime(),
+  endedAt: z.iso.datetime().nullable(),
+  durationMs: z.number().int().nullable(),
+});
+
+export const gameHistoryPageSchema = z.object({
+  games: z.array(gameSummarySchema),
+  nextCursor: objectIdSchema.nullable(),
+  total: z.number().int().min(0),
+});
+
+export const replayHandIndexSchema = z.object({
+  index: z.number().int().min(0),
+  round: windSchema,
+  kyoku: z.number().int().min(1).max(4),
+  honba: z.number().int().min(0),
+  dealer: seatSchema,
+  result: z.enum(['ron', 'tsumo', 'ryuukyoku']),
+  startEvent: z.number().int().min(0),
+  endEvent: z.number().int().min(0),
+  scoreDeltas: z.array(z.number().int()),
+  scoresAfter: z.array(z.number().int()),
+  winners: z.array(
+    z.object({
+      seat: seatSchema,
+      han: z.number().int().min(0),
+      fu: z.number().int().min(0),
+      points: z.number().int().min(0),
+      yaku: z.array(yakuIdSchema),
+    }),
+  ),
+});
+
+export const replayLogSchema = z.object({
+  gameId: objectIdSchema,
+  config: ruleConfigSchema,
+  length: gameLengthSchema,
+  players: z.array(playerInfoSchema).length(4),
+  userIds: z.array(objectIdSchema.nullable()).length(4),
+  seed: z.string(),
+  seedHash: z.string(),
+  placements: z.array(placementSchema).length(4),
+  hands: z.array(replayHandIndexSchema),
+  events: z.array(gameEventSchema),
+  startedAt: z.iso.datetime(),
+  endedAt: z.iso.datetime(),
+});
+
+/** `?limit=&cursor=` on the history list, coerced because a query string is all strings. */
+export const gameHistoryQuerySchema = z.strictObject({
+  limit: z.coerce.number().int().min(1).max(GAME_HISTORY_MAX_PAGE_SIZE).optional(),
+  cursor: objectIdSchema.optional(),
+});
+
 /**
  * Inbound payload schema per client→server event. The gateway looks the schema up by event name,
  * so adding an event without a schema is a type error rather than an unvalidated hole.
@@ -639,6 +769,12 @@ export const SCHEMA_REGISTRY = {
   RefreshRequest: refreshRequestSchema,
   LogoutRequest: logoutRequestSchema,
   ChangePasswordRequest: changePasswordRequestSchema,
+  PlayerStatsView: playerStatsViewSchema,
+  UserProfile: userProfileSchema,
+  GameSummary: gameSummarySchema,
+  GameHistoryPage: gameHistoryPageSchema,
+  ReplayHandIndex: replayHandIndexSchema,
+  ReplayLog: replayLogSchema,
 } as const;
 
 export type SchemaName = keyof typeof SCHEMA_REGISTRY;

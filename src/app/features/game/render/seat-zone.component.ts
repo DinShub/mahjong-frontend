@@ -48,7 +48,7 @@ import { seatWindOf } from '../state/seat-position';
       [selectable]="selectable()"
       [selectedSlot]="selectedSlot()"
       [doraKinds]="doraKinds()"
-      [showDora]="isSelf()"
+      [showDora]="isSelf() || revealAll()"
       [label]="handLabel()"
       [testId]="testId() + '-hand'"
       (pick)="pick.emit($event)"
@@ -94,6 +94,8 @@ export class SeatZoneComponent {
   readonly isSelf = input(false);
   readonly active = input(false);
   readonly interactive = input(false);
+  /** Replay only: show every seat's concealed hand. See {@link revealedHand}. */
+  readonly revealAll = input(false);
   readonly selectable = input<readonly TileStr[] | null>(null);
   readonly selectedSlot = input<number | null>(null);
   readonly doraKinds = input<ReadonlySet<TileKind>>(new Set<TileKind>());
@@ -105,10 +107,18 @@ export class SeatZoneComponent {
 
   protected readonly wind = computed<Wind>(() => seatWindOf(this.seat().seat, this.dealer()));
 
-  /** Face up for you, and for anyone whose tenpai was revealed at an exhaustive draw. */
+  /**
+   * Face up for you, and for anyone whose tenpai was revealed at an exhaustive draw.
+   *
+   * `revealAll` is the replay viewer's third case (`docs/07-frontend.md` §5 — *"`mySeat` selectable
+   * to any of the 4 (or 'all revealed')"*). It only ever *shows* what the view already holds: a
+   * live game's `PlayerView` has `null` in every other seat's `hand`, so setting it there would
+   * reveal nothing. The tiles are in the view because the replay was fed an unredacted log, which
+   * the server serves only for a finished game.
+   */
   protected readonly revealedHand = computed<readonly TileStr[] | null>(() => {
     const seat = this.seat();
-    return this.isSelf() || seat.isTenpaiRevealed ? seat.hand : null;
+    return this.isSelf() || this.revealAll() || seat.isTenpaiRevealed ? seat.hand : null;
   });
 
   /**

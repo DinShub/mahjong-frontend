@@ -1,7 +1,8 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { ComponentFixture } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EMPTY } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Seat } from '@contracts/actions';
@@ -63,7 +64,20 @@ describe('LobbyComponent', () => {
           provide: AuthService,
           useValue: { displayName: signal('Guest-1001'), isGuest: signal(true) },
         },
-        { provide: Router, useValue: { navigate: vi.fn().mockResolvedValue(true) } },
+        // [M5] The header links to /profile and /settings, so `routerLink` needs enough of a
+        // router to build an href: `events` to subscribe to and the two url methods. A stub
+        // rather than `provideRouter`, because this suite is about what the create form *sends*
+        // and a real router would resolve every lazy route to prove it.
+        {
+          provide: Router,
+          useValue: {
+            navigate: vi.fn().mockResolvedValue(true),
+            events: EMPTY,
+            createUrlTree: vi.fn(() => ({})),
+            serializeUrl: vi.fn(() => '/'),
+          },
+        },
+        { provide: ActivatedRoute, useValue: { snapshot: {} } },
       ],
     });
 

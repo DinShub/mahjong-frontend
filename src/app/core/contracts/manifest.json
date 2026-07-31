@@ -1,13 +1,15 @@
 {
   "protocolVersion": 1,
-  "contractsHash": "3c08dde6f1acfd6197c633e3162139e9dc1d400da7709f2bc7abce198f88cb9c",
+  "contractsHash": "d3403425f7d6a21d4f3a37ba55b4ce28af5aed30617de3490b87c76b285f4401",
   "files": {
     "actions.ts": "742de4e2e74c1a399ad99f13a8d0c8036ea3844ff103eacdabd12bab42c9075d",
     "auth.ts": "b1fbc1c70ac824986bfa18d3d6efa7f623ad2205a74bc698cfa63e53b70eb9b8",
-    "index.ts": "01627f7c491b41526cf9ef62b8d51b80d9cbbbb1b63c0705311b90018beb95cc",
+    "index.ts": "8cb83e1df4e361c3d45a637e0dd88cc3f3a9eced8a813131f9e77f4cf99865b4",
+    "project.ts": "bd234e2148affcdcb09901b00396a10d10d5e6fbe501f6765cef88a2e051f2c3",
     "protocol.ts": "17f298a7cfc0de67dc7424b0b59334dbfcd8c9ec208e1070a45027492d400ed8",
-    "schemas.json": "73afd579b3d3db229524e792766cf44a322095a24fa07e25cc9b0e6de3e376d8",
-    "schemas.ts": "bd8ff93d8b844f8b49c927cd41912e495f73a6a798ff00ffc1f1e137be4e11b7",
+    "schemas.json": "027e1469414f5d2a510ddbea54b915a0c894208846069bd3469697096ecbd06b",
+    "schemas.ts": "577765167948cf4c5a6ef3ad3867fae8bfadcc016ddfd4fc78b01855aed74f90",
+    "stats.ts": "3cf1e748594665a59db45cf7592a3b7cb68b035bc2acc1fc1eb8c4c11cdf98e9",
     "tiles.ts": "50d8efe7a2c32e5bb530fafd7a9263beb11fa9c4f81f222234edc66323811e91",
     "views.ts": "50e335d6067c557544ddc7b1a06f81e2393abb2a02d3f89c18a2dddc7bc7bafe"
   }

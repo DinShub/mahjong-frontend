@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import type { BotLevel, GameLength, Seat } from '@contracts/actions';
 import type { SeatConfig, SeatFill } from '@contracts/views';
@@ -50,18 +50,24 @@ const DEFAULT_SEATS: SeatQuartet = [
 @Component({
   selector: 'mj-lobby',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   host: { class: 'mj-lobby', '[attr.data-testid]': '"lobby"' },
   template: `
     <main>
       <header>
-        <h1>Lobby</h1>
+        <h1 i18n="@@lobby.title">Lobby</h1>
         <p class="who" data-testid="lobby-user">
           {{ auth.displayName() ?? 'Guest' }}
           @if (auth.isGuest()) {
             <span class="tag">guest</span>
           }
         </p>
+        <!-- The only way into M5's screens: there is no app-wide chrome, and the lobby is the
+             one place a player is between games. -->
+        <nav class="links">
+          <a routerLink="/profile" data-testid="nav-profile" i18n="@@nav.profile">Profile</a>
+          <a routerLink="/settings" data-testid="nav-settings" i18n="@@nav.settings">Settings</a>
+        </nav>
       </header>
 
       <section class="panel">
@@ -223,6 +229,21 @@ const DEFAULT_SEATS: SeatQuartet = [
     .who {
       margin: 0.25rem 0 0;
       color: var(--mj-text-muted);
+    }
+
+    .links {
+      display: flex;
+      gap: 1rem;
+      margin-block-start: 0.75rem;
+    }
+
+    .links a {
+      color: var(--mj-accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
     }
 
     .tag {

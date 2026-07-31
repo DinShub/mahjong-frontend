@@ -73,6 +73,25 @@ interface OpponentCard {
             size="opponent"
             [testId]="'portrait-melds-' + card.name"
           />
+          <!--
+            Replay only. A live portrait board shows a hand *count* and not tile backs, because at
+            phone width a row of backs is a row of grey rectangles that says nothing a number does
+            not (docs/08 §2). Revealed tiles are the opposite case: they are the most useful thing
+            on the screen, and a replay that hides them on a phone is a replay you have to open on
+            a desktop.
+          -->
+          @if (revealAll() && card.seat.hand !== null) {
+            <mj-hand
+              [hand]="card.seat.hand"
+              [count]="card.seat.handSize"
+              [drawn]="card.seat.drawn"
+              [detached]="card.seat.handSize % 3 === 2"
+              size="opponent"
+              [doraKinds]="dora()"
+              [showDora]="true"
+              [testId]="'portrait-hand-' + card.name"
+            />
+          }
         </div>
       }
     </header>
@@ -276,6 +295,8 @@ interface OpponentCard {
 export class BoardPortraitComponent {
   readonly view = input.required<PlayerView>();
   readonly interactive = input(false);
+  /** Replay only: every seat's hand face up. See the opponent card above. */
+  readonly revealAll = input(false);
   readonly selectableTiles = input<readonly TileStr[] | null>(null);
   readonly selectedSlot = input<number | null>(null);
   readonly deadlineProgress = input<number | null>(null);

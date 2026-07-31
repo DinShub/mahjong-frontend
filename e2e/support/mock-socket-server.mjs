@@ -16,7 +16,7 @@
  */
 
 import { createServer } from 'node:http';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -36,9 +36,12 @@ const ORIGINS = ['http://localhost:4300', 'http://127.0.0.1:4300'];
 // Fixtures
 // ---------------------------------------------------------------------------
 
+/** `replay.json` is [M5]'s whole-game log, not a per-hand wire fixture — see below. */
+const NOT_WIRE_FIXTURES = new Set(['manifest.json', 'replay.json']);
+
 const fixtures = new Map();
 for (const name of readdirSync(FIXTURE_DIR)) {
-  if (!name.endsWith('.json') || name === 'manifest.json') continue;
+  if (!name.endsWith('.json') || NOT_WIRE_FIXTURES.has(name)) continue;
   fixtures.set(
     name.replace(/\.json$/, ''),
     JSON.parse(readFileSync(join(FIXTURE_DIR, name), 'utf8')),
@@ -107,6 +110,94 @@ function readBody(request) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// [M5] Stats, history and replay
+// ---------------------------------------------------------------------------
+
+/**
+ * The published replay, served verbatim.
+ *
+ * `test-fixtures/replay.json` is a whole game the backend engine dealt, unredacted, with the seed
+ * whose sha256 is its `seedHash`. Serving the real thing is what lets an e2e test press "Verify
+ * the wall" and get a genuine answer — the client re-derives 136 tiles per hand from that seed and
+ * has to find the tiles the engine put there.
+ */
+const replayLog = existsSync(join(FIXTURE_DIR, 'replay.json'))
+  ? JSON.parse(readFileSync(join(FIXTURE_DIR, 'replay.json'), 'utf8'))
+  : null;
+
+/** A game id the replay endpoint refuses, standing in for one that is still being played. */
+const LIVE_GAME_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+
+const PROFILE_USER_ID = '65a1b2c3d4e5f60718293a4c';
+
+/** Numbers chosen to be checkable on screen: 4 games, 2 firsts, a quarter win rate. */
+function statsProfile() {
+  return {
+    userId: PROFILE_USER_ID,
+    displayName: 'Kaori',
+    avatarId: 'a2',
+    isGuest: false,
+    createdAt: '2026-06-01T10:00:00.000Z',
+    stats: {
+      userId: PROFILE_USER_ID,
+      games: 4,
+      hanchan: 3,
+      tonpuusen: 1,
+      placements: [2, 1, 1, 0],
+      avgPlacement: 1.75,
+      totalNetScore: 42,
+      busts: 0,
+      hands: 32,
+      wins: 8,
+      winRate: 0.25,
+      dealIns: 4,
+      dealInRate: 0.125,
+      tsumoWins: 3,
+      riichiDeclared: 10,
+      riichiRate: 0.3125,
+      riichiWinRate: 0.5,
+      callRate: 0.1875,
+      tenpaiAtDraw: 3,
+      drawsPlayed: 5,
+      avgWinPoints: 5200,
+      avgDealInPoints: 4800,
+      avgWinTurn: 10.5,
+      yakuCounts: { riichi: 10, tanyao: 4, pinfu: 2, honitsu: 1 },
+      yakumanCount: 1,
+      updatedAt: '2026-07-31T10:00:00.000Z',
+    },
+  };
+}
+
+function gameSummary(index) {
+  const gameId = String(index).repeat(24).slice(0, 24);
+  return {
+    gameId,
+    status: 'finished',
+    length: index === 3 ? 'tonpuusen' : 'hanchan',
+    isPrivate: false,
+    hands: 8 + index,
+    players: [0, 1, 2, 3].map((seat) => ({
+      seat,
+      userId: seat === 0 ? PROFILE_USER_ID : null,
+      displayName: seat === 0 ? 'Kaori' : `Bot ${seat}`,
+      avatarId: seat === 0 ? 'a2' : 'bot',
+      isBot: seat !== 0,
+      botLevel: seat === 0 ? null : 'normal',
+      finalScore: 32_000 - seat * 3000,
+      placement: seat + 1,
+      netScore: 30 - seat * 15,
+    })),
+    seat: 0,
+    seedHash: 'a'.repeat(64),
+    seed: 'published-seed',
+    startedAt: `2026-07-2${index}T10:00:00.000Z`,
+    endedAt: `2026-07-2${index}T10:40:00.000Z`,
+    durationMs: 2_400_000,
+  };
+}
+
 function send(response, status, body) {
   response.writeHead(status, {
     'content-type': 'application/json',
@@ -158,6 +249,48 @@ const http = createServer((request, response) => {
       io.emit('player:afk', { seat: Number(body.seat ?? 0), takenOverByBot: true });
       send(response, 200, { ok: true });
     });
+    return;
+  }
+
+  // -------------------------------------------------------------------------
+  // [M5] The read surface: stats, history, replay.
+  // -------------------------------------------------------------------------
+
+  if (url.pathname === '/stats/me' || /^\/users\/[^/]+\/profile$/.test(url.pathname)) {
+    send(response, 200, statsProfile());
+    return;
+  }
+
+  if (/^\/users\/[^/]+\/games$/.test(url.pathname)) {
+    // Two pages, so the "Load more" button has something to load. The cursor is the second page's
+    // marker and nothing else — the real one is an ObjectId, and the client only echoes it back.
+    const cursor = url.searchParams.get('cursor');
+    send(
+      response,
+      200,
+      cursor === null
+        ? { games: [gameSummary(0), gameSummary(1)], nextCursor: 'c'.repeat(24), total: 3 }
+        : { games: [gameSummary(2)], nextCursor: null, total: 3 },
+    );
+    return;
+  }
+
+  if (url.pathname.startsWith('/replays/')) {
+    const gameId = url.pathname.split('/')[2] ?? '';
+    // The one rule the endpoint has: a game that is not finished is refused. `LIVE_GAME_ID` is how
+    // a test asks for that path without the mock having to model a live game.
+    if (gameId === LIVE_GAME_ID) {
+      send(response, 403, {
+        code: 'GAME_NOT_FINISHED',
+        message: 'replays are served for finished games only',
+      });
+      return;
+    }
+    if (replayLog === null) {
+      send(response, 404, { code: 'NOT_FOUND', message: 'no replay fixture' });
+      return;
+    }
+    send(response, 200, { ...replayLog, gameId });
     return;
   }
 

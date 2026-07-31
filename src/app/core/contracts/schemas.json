@@ -3627,6 +3627,269 @@
         }
       ]
     },
+    "GameHistoryPage": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "games": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gameId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{24}$"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "in_progress",
+                  "finished",
+                  "abandoned"
+                ]
+              },
+              "length": {
+                "type": "string",
+                "enum": [
+                  "tonpuusen",
+                  "hanchan"
+                ]
+              },
+              "isPrivate": {
+                "type": "boolean"
+              },
+              "hands": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "players": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "seat": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 0
+                        },
+                        {
+                          "type": "number",
+                          "const": 1
+                        },
+                        {
+                          "type": "number",
+                          "const": 2
+                        },
+                        {
+                          "type": "number",
+                          "const": 3
+                        }
+                      ]
+                    },
+                    "userId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{24}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "avatarId": {
+                      "type": "string"
+                    },
+                    "isBot": {
+                      "type": "boolean"
+                    },
+                    "botLevel": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "finalScore": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "placement": {
+                      "anyOf": [
+                        {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 1
+                            },
+                            {
+                              "type": "number",
+                              "const": 2
+                            },
+                            {
+                              "type": "number",
+                              "const": 3
+                            },
+                            {
+                              "type": "number",
+                              "const": 4
+                            }
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "netScore": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "seat",
+                    "userId",
+                    "displayName",
+                    "avatarId",
+                    "isBot",
+                    "botLevel",
+                    "finalScore",
+                    "placement",
+                    "netScore"
+                  ]
+                }
+              },
+              "seat": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "seedHash": {
+                "type": "string"
+              },
+              "seed": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "startedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+              },
+              "endedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationMs": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "gameId",
+              "status",
+              "length",
+              "isPrivate",
+              "hands",
+              "players",
+              "seat",
+              "seedHash",
+              "seed",
+              "startedAt",
+              "endedAt",
+              "durationMs"
+            ]
+          }
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{24}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "games",
+        "nextCursor",
+        "total"
+      ]
+    },
     "GameResyncPayload": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -3671,6 +3934,240 @@
         "stampId"
       ],
       "additionalProperties": false
+    },
+    "GameSummary": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "gameId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{24}$"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "in_progress",
+            "finished",
+            "abandoned"
+          ]
+        },
+        "length": {
+          "type": "string",
+          "enum": [
+            "tonpuusen",
+            "hanchan"
+          ]
+        },
+        "isPrivate": {
+          "type": "boolean"
+        },
+        "hands": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "players": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "seat": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 0
+                  },
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  },
+                  {
+                    "type": "number",
+                    "const": 3
+                  }
+                ]
+              },
+              "userId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{24}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "displayName": {
+                "type": "string"
+              },
+              "avatarId": {
+                "type": "string"
+              },
+              "isBot": {
+                "type": "boolean"
+              },
+              "botLevel": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "finalScore": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "placement": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      },
+                      {
+                        "type": "number",
+                        "const": 4
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "netScore": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "seat",
+              "userId",
+              "displayName",
+              "avatarId",
+              "isBot",
+              "botLevel",
+              "finalScore",
+              "placement",
+              "netScore"
+            ]
+          }
+        },
+        "seat": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 0
+                },
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                },
+                {
+                  "type": "number",
+                  "const": 3
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "seedHash": {
+          "type": "string"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+        },
+        "endedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "durationMs": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "gameId",
+        "status",
+        "length",
+        "isPrivate",
+        "hands",
+        "players",
+        "seat",
+        "seedHash",
+        "seed",
+        "startedAt",
+        "endedAt",
+        "durationMs"
+      ]
     },
     "HandshakeAuth": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4024,6 +4521,175 @@
         "avatarId",
         "isBot",
         "botLevel"
+      ]
+    },
+    "PlayerStatsView": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{24}$"
+        },
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "hanchan": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "tonpuusen": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "placements": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          ]
+        },
+        "avgPlacement": {
+          "type": "number"
+        },
+        "totalNetScore": {
+          "type": "number"
+        },
+        "busts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "hands": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "wins": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "winRate": {
+          "type": "number"
+        },
+        "dealIns": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "dealInRate": {
+          "type": "number"
+        },
+        "tsumoWins": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "riichiDeclared": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "riichiRate": {
+          "type": "number"
+        },
+        "riichiWinRate": {
+          "type": "number"
+        },
+        "callRate": {
+          "type": "number"
+        },
+        "tenpaiAtDraw": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "drawsPlayed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "avgWinPoints": {
+          "type": "number"
+        },
+        "avgDealInPoints": {
+          "type": "number"
+        },
+        "avgWinTurn": {
+          "type": "number"
+        },
+        "yakuCounts": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "yakumanCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+        }
+      },
+      "required": [
+        "userId",
+        "games",
+        "hanchan",
+        "tonpuusen",
+        "placements",
+        "avgPlacement",
+        "totalNetScore",
+        "busts",
+        "hands",
+        "wins",
+        "winRate",
+        "dealIns",
+        "dealInRate",
+        "tsumoWins",
+        "riichiDeclared",
+        "riichiRate",
+        "riichiWinRate",
+        "callRate",
+        "tenpaiAtDraw",
+        "drawsPlayed",
+        "avgWinPoints",
+        "avgDealInPoints",
+        "avgWinTurn",
+        "yakuCounts",
+        "yakumanCount",
+        "updatedAt"
       ]
     },
     "PlayerView": {
@@ -6435,6 +7101,2534 @@
         "displayName"
       ],
       "additionalProperties": false
+    },
+    "ReplayHandIndex": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "round": {
+          "anyOf": [
+            {
+              "type": "number",
+              "const": 0
+            },
+            {
+              "type": "number",
+              "const": 1
+            },
+            {
+              "type": "number",
+              "const": 2
+            },
+            {
+              "type": "number",
+              "const": 3
+            }
+          ]
+        },
+        "kyoku": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "honba": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "dealer": {
+          "anyOf": [
+            {
+              "type": "number",
+              "const": 0
+            },
+            {
+              "type": "number",
+              "const": 1
+            },
+            {
+              "type": "number",
+              "const": 2
+            },
+            {
+              "type": "number",
+              "const": 3
+            }
+          ]
+        },
+        "result": {
+          "type": "string",
+          "enum": [
+            "ron",
+            "tsumo",
+            "ryuukyoku"
+          ]
+        },
+        "startEvent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "endEvent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "scoreDeltas": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "scoresAfter": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "winners": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "seat": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 0
+                  },
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  },
+                  {
+                    "type": "number",
+                    "const": 3
+                  }
+                ]
+              },
+              "han": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "fu": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "points": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "yaku": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "riichi",
+                    "ippatsu",
+                    "menzen_tsumo",
+                    "pinfu",
+                    "tanyao",
+                    "yakuhai_haku",
+                    "yakuhai_hatsu",
+                    "yakuhai_chun",
+                    "yakuhai_seat_wind",
+                    "yakuhai_round_wind",
+                    "iipeikou",
+                    "haitei_raoyue",
+                    "houtei_raoyui",
+                    "rinshan_kaihou",
+                    "chankan",
+                    "double_riichi",
+                    "chiitoitsu",
+                    "sanshoku_doujun",
+                    "ittsuu",
+                    "chanta",
+                    "toitoi",
+                    "sanankou",
+                    "sanshoku_doukou",
+                    "sankantsu",
+                    "shousangen",
+                    "honroutou",
+                    "honitsu",
+                    "junchan",
+                    "ryanpeikou",
+                    "chinitsu",
+                    "kokushi_musou",
+                    "suuankou",
+                    "daisangen",
+                    "shousuushii",
+                    "daisuushii",
+                    "tsuuiisou",
+                    "chinroutou",
+                    "ryuuiisou",
+                    "chuuren_poutou",
+                    "suukantsu",
+                    "tenhou",
+                    "chiihou"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "seat",
+              "han",
+              "fu",
+              "points",
+              "yaku"
+            ]
+          }
+        }
+      },
+      "required": [
+        "index",
+        "round",
+        "kyoku",
+        "honba",
+        "dealer",
+        "result",
+        "startEvent",
+        "endEvent",
+        "scoreDeltas",
+        "scoresAfter",
+        "winners"
+      ]
+    },
+    "ReplayLog": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "gameId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{24}$"
+        },
+        "config": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "standard"
+            },
+            "length": {
+              "type": "string",
+              "enum": [
+                "tonpuusen",
+                "hanchan"
+              ]
+            },
+            "startingPoints": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "returnPoints": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "uma": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              ]
+            },
+            "redFives": {
+              "type": "object",
+              "properties": {
+                "m": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4
+                },
+                "p": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4
+                },
+                "s": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4
+                }
+              },
+              "required": [
+                "m",
+                "p",
+                "s"
+              ]
+            },
+            "kuitan": {
+              "type": "boolean"
+            },
+            "kuikae": {
+              "type": "boolean"
+            },
+            "atozuke": {
+              "type": "boolean"
+            },
+            "agariYame": {
+              "type": "boolean"
+            },
+            "tobi": {
+              "type": "boolean"
+            },
+            "enchousen": {
+              "type": "boolean"
+            },
+            "nagashiMangan": {
+              "type": "boolean"
+            },
+            "doubleRon": {
+              "type": "boolean"
+            },
+            "sanchahouAborts": {
+              "type": "boolean"
+            },
+            "sekininBarai": {
+              "type": "boolean"
+            },
+            "kazoeYakuman": {
+              "type": "boolean"
+            },
+            "doubleYakuman": {
+              "type": "boolean"
+            },
+            "renhou": {
+              "type": "string",
+              "enum": [
+                "none",
+                "mangan",
+                "yakuman"
+              ]
+            },
+            "kiriageMangan": {
+              "type": "boolean"
+            },
+            "chankanOnAnkan": {
+              "type": "boolean"
+            },
+            "uraDora": {
+              "type": "boolean"
+            },
+            "kanDora": {
+              "type": "boolean"
+            },
+            "kanUraDora": {
+              "type": "boolean"
+            },
+            "ippatsu": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "profile",
+            "length",
+            "startingPoints",
+            "returnPoints",
+            "uma",
+            "redFives",
+            "kuitan",
+            "kuikae",
+            "atozuke",
+            "agariYame",
+            "tobi",
+            "enchousen",
+            "nagashiMangan",
+            "doubleRon",
+            "sanchahouAborts",
+            "sekininBarai",
+            "kazoeYakuman",
+            "doubleYakuman",
+            "renhou",
+            "kiriageMangan",
+            "chankanOnAnkan",
+            "uraDora",
+            "kanDora",
+            "kanUraDora",
+            "ippatsu"
+          ]
+        },
+        "length": {
+          "type": "string",
+          "enum": [
+            "tonpuusen",
+            "hanchan"
+          ]
+        },
+        "players": {
+          "minItems": 4,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{24}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "displayName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "avatarId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "isBot": {
+                "type": "boolean"
+              },
+              "botLevel": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "easy",
+                      "normal",
+                      "hard"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "userId",
+              "displayName",
+              "avatarId",
+              "isBot",
+              "botLevel"
+            ]
+          }
+        },
+        "userIds": {
+          "minItems": 4,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{24}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "seed": {
+          "type": "string"
+        },
+        "seedHash": {
+          "type": "string"
+        },
+        "placements": {
+          "minItems": 4,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "seat": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 0
+                  },
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  },
+                  {
+                    "type": "number",
+                    "const": 3
+                  }
+                ]
+              },
+              "place": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  },
+                  {
+                    "type": "number",
+                    "const": 3
+                  },
+                  {
+                    "type": "number",
+                    "const": 4
+                  }
+                ]
+              },
+              "finalScore": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "netScore": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "seat",
+              "place",
+              "finalScore",
+              "netScore"
+            ]
+          }
+        },
+        "hands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "round": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 0
+                  },
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  },
+                  {
+                    "type": "number",
+                    "const": 3
+                  }
+                ]
+              },
+              "kyoku": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              },
+              "honba": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "dealer": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 0
+                  },
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  },
+                  {
+                    "type": "number",
+                    "const": 3
+                  }
+                ]
+              },
+              "result": {
+                "type": "string",
+                "enum": [
+                  "ron",
+                  "tsumo",
+                  "ryuukyoku"
+                ]
+              },
+              "startEvent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "endEvent": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "scoreDeltas": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "scoresAfter": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "winners": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "seat": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 0
+                        },
+                        {
+                          "type": "number",
+                          "const": 1
+                        },
+                        {
+                          "type": "number",
+                          "const": 2
+                        },
+                        {
+                          "type": "number",
+                          "const": 3
+                        }
+                      ]
+                    },
+                    "han": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "fu": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "points": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "yaku": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "riichi",
+                          "ippatsu",
+                          "menzen_tsumo",
+                          "pinfu",
+                          "tanyao",
+                          "yakuhai_haku",
+                          "yakuhai_hatsu",
+                          "yakuhai_chun",
+                          "yakuhai_seat_wind",
+                          "yakuhai_round_wind",
+                          "iipeikou",
+                          "haitei_raoyue",
+                          "houtei_raoyui",
+                          "rinshan_kaihou",
+                          "chankan",
+                          "double_riichi",
+                          "chiitoitsu",
+                          "sanshoku_doujun",
+                          "ittsuu",
+                          "chanta",
+                          "toitoi",
+                          "sanankou",
+                          "sanshoku_doukou",
+                          "sankantsu",
+                          "shousangen",
+                          "honroutou",
+                          "honitsu",
+                          "junchan",
+                          "ryanpeikou",
+                          "chinitsu",
+                          "kokushi_musou",
+                          "suuankou",
+                          "daisangen",
+                          "shousuushii",
+                          "daisuushii",
+                          "tsuuiisou",
+                          "chinroutou",
+                          "ryuuiisou",
+                          "chuuren_poutou",
+                          "suukantsu",
+                          "tenhou",
+                          "chiihou"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "seat",
+                    "han",
+                    "fu",
+                    "points",
+                    "yaku"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "index",
+              "round",
+              "kyoku",
+              "honba",
+              "dealer",
+              "result",
+              "startEvent",
+              "endEvent",
+              "scoreDeltas",
+              "scoresAfter",
+              "winners"
+            ]
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "game-start"
+                  },
+                  "config": {
+                    "type": "object",
+                    "properties": {
+                      "profile": {
+                        "type": "string",
+                        "const": "standard"
+                      },
+                      "length": {
+                        "type": "string",
+                        "enum": [
+                          "tonpuusen",
+                          "hanchan"
+                        ]
+                      },
+                      "startingPoints": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "returnPoints": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "uma": {
+                        "type": "array",
+                        "prefixItems": [
+                          {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      },
+                      "redFives": {
+                        "type": "object",
+                        "properties": {
+                          "m": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4
+                          },
+                          "p": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4
+                          },
+                          "s": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4
+                          }
+                        },
+                        "required": [
+                          "m",
+                          "p",
+                          "s"
+                        ]
+                      },
+                      "kuitan": {
+                        "type": "boolean"
+                      },
+                      "kuikae": {
+                        "type": "boolean"
+                      },
+                      "atozuke": {
+                        "type": "boolean"
+                      },
+                      "agariYame": {
+                        "type": "boolean"
+                      },
+                      "tobi": {
+                        "type": "boolean"
+                      },
+                      "enchousen": {
+                        "type": "boolean"
+                      },
+                      "nagashiMangan": {
+                        "type": "boolean"
+                      },
+                      "doubleRon": {
+                        "type": "boolean"
+                      },
+                      "sanchahouAborts": {
+                        "type": "boolean"
+                      },
+                      "sekininBarai": {
+                        "type": "boolean"
+                      },
+                      "kazoeYakuman": {
+                        "type": "boolean"
+                      },
+                      "doubleYakuman": {
+                        "type": "boolean"
+                      },
+                      "renhou": {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "mangan",
+                          "yakuman"
+                        ]
+                      },
+                      "kiriageMangan": {
+                        "type": "boolean"
+                      },
+                      "chankanOnAnkan": {
+                        "type": "boolean"
+                      },
+                      "uraDora": {
+                        "type": "boolean"
+                      },
+                      "kanDora": {
+                        "type": "boolean"
+                      },
+                      "kanUraDora": {
+                        "type": "boolean"
+                      },
+                      "ippatsu": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "profile",
+                      "length",
+                      "startingPoints",
+                      "returnPoints",
+                      "uma",
+                      "redFives",
+                      "kuitan",
+                      "kuikae",
+                      "atozuke",
+                      "agariYame",
+                      "tobi",
+                      "enchousen",
+                      "nagashiMangan",
+                      "doubleRon",
+                      "sanchahouAborts",
+                      "sekininBarai",
+                      "kazoeYakuman",
+                      "doubleYakuman",
+                      "renhou",
+                      "kiriageMangan",
+                      "chankanOnAnkan",
+                      "uraDora",
+                      "kanDora",
+                      "kanUraDora",
+                      "ippatsu"
+                    ]
+                  },
+                  "players": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{24}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "displayName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 32
+                        },
+                        "avatarId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "isBot": {
+                          "type": "boolean"
+                        },
+                        "botLevel": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "easy",
+                                "normal",
+                                "hard"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "userId",
+                        "displayName",
+                        "avatarId",
+                        "isBot",
+                        "botLevel"
+                      ]
+                    }
+                  },
+                  "seedHash": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "seed": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "t",
+                  "config",
+                  "players",
+                  "seedHash"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "hand-start"
+                  },
+                  "handIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "round": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "kyoku": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  },
+                  "honba": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "riichiSticks": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "dealer": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "scores": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "hands": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "1m",
+                              "2m",
+                              "3m",
+                              "4m",
+                              "5m",
+                              "6m",
+                              "7m",
+                              "8m",
+                              "9m",
+                              "0m",
+                              "1p",
+                              "2p",
+                              "3p",
+                              "4p",
+                              "5p",
+                              "6p",
+                              "7p",
+                              "8p",
+                              "9p",
+                              "0p",
+                              "1s",
+                              "2s",
+                              "3s",
+                              "4s",
+                              "5s",
+                              "6s",
+                              "7s",
+                              "8s",
+                              "9s",
+                              "0s",
+                              "1z",
+                              "2z",
+                              "3z",
+                              "4z",
+                              "5z",
+                              "6z",
+                              "7z"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "doraIndicator": {
+                    "type": "string",
+                    "enum": [
+                      "1m",
+                      "2m",
+                      "3m",
+                      "4m",
+                      "5m",
+                      "6m",
+                      "7m",
+                      "8m",
+                      "9m",
+                      "0m",
+                      "1p",
+                      "2p",
+                      "3p",
+                      "4p",
+                      "5p",
+                      "6p",
+                      "7p",
+                      "8p",
+                      "9p",
+                      "0p",
+                      "1s",
+                      "2s",
+                      "3s",
+                      "4s",
+                      "5s",
+                      "6s",
+                      "7s",
+                      "8s",
+                      "9s",
+                      "0s",
+                      "1z",
+                      "2z",
+                      "3z",
+                      "4z",
+                      "5z",
+                      "6z",
+                      "7z"
+                    ]
+                  }
+                },
+                "required": [
+                  "t",
+                  "handIndex",
+                  "round",
+                  "kyoku",
+                  "honba",
+                  "riichiSticks",
+                  "dealer",
+                  "scores",
+                  "hands",
+                  "doraIndicator"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "draw"
+                  },
+                  "seat": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "tile": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "1m",
+                          "2m",
+                          "3m",
+                          "4m",
+                          "5m",
+                          "6m",
+                          "7m",
+                          "8m",
+                          "9m",
+                          "0m",
+                          "1p",
+                          "2p",
+                          "3p",
+                          "4p",
+                          "5p",
+                          "6p",
+                          "7p",
+                          "8p",
+                          "9p",
+                          "0p",
+                          "1s",
+                          "2s",
+                          "3s",
+                          "4s",
+                          "5s",
+                          "6s",
+                          "7s",
+                          "8s",
+                          "9s",
+                          "0s",
+                          "1z",
+                          "2z",
+                          "3z",
+                          "4z",
+                          "5z",
+                          "6z",
+                          "7z"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "fromRinshan": {
+                    "type": "boolean"
+                  },
+                  "wallRemaining": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "t",
+                  "seat",
+                  "tile",
+                  "fromRinshan",
+                  "wallRemaining"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "discard"
+                  },
+                  "seat": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "tile": {
+                    "type": "string",
+                    "enum": [
+                      "1m",
+                      "2m",
+                      "3m",
+                      "4m",
+                      "5m",
+                      "6m",
+                      "7m",
+                      "8m",
+                      "9m",
+                      "0m",
+                      "1p",
+                      "2p",
+                      "3p",
+                      "4p",
+                      "5p",
+                      "6p",
+                      "7p",
+                      "8p",
+                      "9p",
+                      "0p",
+                      "1s",
+                      "2s",
+                      "3s",
+                      "4s",
+                      "5s",
+                      "6s",
+                      "7s",
+                      "8s",
+                      "9s",
+                      "0s",
+                      "1z",
+                      "2z",
+                      "3z",
+                      "4z",
+                      "5z",
+                      "6z",
+                      "7z"
+                    ]
+                  },
+                  "tsumogiri": {
+                    "type": "boolean"
+                  },
+                  "riichi": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "t",
+                  "seat",
+                  "tile",
+                  "tsumogiri",
+                  "riichi"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "call"
+                  },
+                  "seat": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "meld": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "chi",
+                          "pon",
+                          "daiminkan",
+                          "shouminkan",
+                          "ankan"
+                        ]
+                      },
+                      "tiles": {
+                        "minItems": 3,
+                        "maxItems": 4,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "1m",
+                            "2m",
+                            "3m",
+                            "4m",
+                            "5m",
+                            "6m",
+                            "7m",
+                            "8m",
+                            "9m",
+                            "0m",
+                            "1p",
+                            "2p",
+                            "3p",
+                            "4p",
+                            "5p",
+                            "6p",
+                            "7p",
+                            "8p",
+                            "9p",
+                            "0p",
+                            "1s",
+                            "2s",
+                            "3s",
+                            "4s",
+                            "5s",
+                            "6s",
+                            "7s",
+                            "8s",
+                            "9s",
+                            "0s",
+                            "1z",
+                            "2z",
+                            "3z",
+                            "4z",
+                            "5z",
+                            "6z",
+                            "7z"
+                          ]
+                        }
+                      },
+                      "calledTile": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "1m",
+                              "2m",
+                              "3m",
+                              "4m",
+                              "5m",
+                              "6m",
+                              "7m",
+                              "8m",
+                              "9m",
+                              "0m",
+                              "1p",
+                              "2p",
+                              "3p",
+                              "4p",
+                              "5p",
+                              "6p",
+                              "7p",
+                              "8p",
+                              "9p",
+                              "0p",
+                              "1s",
+                              "2s",
+                              "3s",
+                              "4s",
+                              "5s",
+                              "6s",
+                              "7s",
+                              "8s",
+                              "9s",
+                              "0s",
+                              "1z",
+                              "2z",
+                              "3z",
+                              "4z",
+                              "5z",
+                              "6z",
+                              "7z"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "from": {
+                        "anyOf": [
+                          {
+                            "anyOf": [
+                              {
+                                "type": "number",
+                                "const": 0
+                              },
+                              {
+                                "type": "number",
+                                "const": 1
+                              },
+                              {
+                                "type": "number",
+                                "const": 2
+                              },
+                              {
+                                "type": "number",
+                                "const": 3
+                              }
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "calledIndex": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 3
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "tiles",
+                      "calledTile",
+                      "from",
+                      "calledIndex"
+                    ]
+                  },
+                  "from": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "t",
+                  "seat",
+                  "meld",
+                  "from"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "riichi-accepted"
+                  },
+                  "seat": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "sticks": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "scores": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  }
+                },
+                "required": [
+                  "t",
+                  "seat",
+                  "sticks",
+                  "scores"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "dora-revealed"
+                  },
+                  "indicator": {
+                    "type": "string",
+                    "enum": [
+                      "1m",
+                      "2m",
+                      "3m",
+                      "4m",
+                      "5m",
+                      "6m",
+                      "7m",
+                      "8m",
+                      "9m",
+                      "0m",
+                      "1p",
+                      "2p",
+                      "3p",
+                      "4p",
+                      "5p",
+                      "6p",
+                      "7p",
+                      "8p",
+                      "9p",
+                      "0p",
+                      "1s",
+                      "2s",
+                      "3s",
+                      "4s",
+                      "5s",
+                      "6s",
+                      "7s",
+                      "8s",
+                      "9s",
+                      "0s",
+                      "1z",
+                      "2z",
+                      "3z",
+                      "4z",
+                      "5z",
+                      "6z",
+                      "7z"
+                    ]
+                  }
+                },
+                "required": [
+                  "t",
+                  "indicator"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "agari"
+                  },
+                  "winners": {
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "seat": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 0
+                            },
+                            {
+                              "type": "number",
+                              "const": 1
+                            },
+                            {
+                              "type": "number",
+                              "const": 2
+                            },
+                            {
+                              "type": "number",
+                              "const": 3
+                            }
+                          ]
+                        },
+                        "from": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 0
+                            },
+                            {
+                              "type": "number",
+                              "const": 1
+                            },
+                            {
+                              "type": "number",
+                              "const": 2
+                            },
+                            {
+                              "type": "number",
+                              "const": 3
+                            }
+                          ]
+                        },
+                        "hand": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "1m",
+                              "2m",
+                              "3m",
+                              "4m",
+                              "5m",
+                              "6m",
+                              "7m",
+                              "8m",
+                              "9m",
+                              "0m",
+                              "1p",
+                              "2p",
+                              "3p",
+                              "4p",
+                              "5p",
+                              "6p",
+                              "7p",
+                              "8p",
+                              "9p",
+                              "0p",
+                              "1s",
+                              "2s",
+                              "3s",
+                              "4s",
+                              "5s",
+                              "6s",
+                              "7s",
+                              "8s",
+                              "9s",
+                              "0s",
+                              "1z",
+                              "2z",
+                              "3z",
+                              "4z",
+                              "5z",
+                              "6z",
+                              "7z"
+                            ]
+                          }
+                        },
+                        "melds": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "chi",
+                                  "pon",
+                                  "daiminkan",
+                                  "shouminkan",
+                                  "ankan"
+                                ]
+                              },
+                              "tiles": {
+                                "minItems": 3,
+                                "maxItems": 4,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "1m",
+                                    "2m",
+                                    "3m",
+                                    "4m",
+                                    "5m",
+                                    "6m",
+                                    "7m",
+                                    "8m",
+                                    "9m",
+                                    "0m",
+                                    "1p",
+                                    "2p",
+                                    "3p",
+                                    "4p",
+                                    "5p",
+                                    "6p",
+                                    "7p",
+                                    "8p",
+                                    "9p",
+                                    "0p",
+                                    "1s",
+                                    "2s",
+                                    "3s",
+                                    "4s",
+                                    "5s",
+                                    "6s",
+                                    "7s",
+                                    "8s",
+                                    "9s",
+                                    "0s",
+                                    "1z",
+                                    "2z",
+                                    "3z",
+                                    "4z",
+                                    "5z",
+                                    "6z",
+                                    "7z"
+                                  ]
+                                }
+                              },
+                              "calledTile": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "1m",
+                                      "2m",
+                                      "3m",
+                                      "4m",
+                                      "5m",
+                                      "6m",
+                                      "7m",
+                                      "8m",
+                                      "9m",
+                                      "0m",
+                                      "1p",
+                                      "2p",
+                                      "3p",
+                                      "4p",
+                                      "5p",
+                                      "6p",
+                                      "7p",
+                                      "8p",
+                                      "9p",
+                                      "0p",
+                                      "1s",
+                                      "2s",
+                                      "3s",
+                                      "4s",
+                                      "5s",
+                                      "6s",
+                                      "7s",
+                                      "8s",
+                                      "9s",
+                                      "0s",
+                                      "1z",
+                                      "2z",
+                                      "3z",
+                                      "4z",
+                                      "5z",
+                                      "6z",
+                                      "7z"
+                                    ]
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "from": {
+                                "anyOf": [
+                                  {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "const": 0
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 1
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 2
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 3
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "calledIndex": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 3
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "tiles",
+                              "calledTile",
+                              "from",
+                              "calledIndex"
+                            ]
+                          }
+                        },
+                        "winningTile": {
+                          "type": "string",
+                          "enum": [
+                            "1m",
+                            "2m",
+                            "3m",
+                            "4m",
+                            "5m",
+                            "6m",
+                            "7m",
+                            "8m",
+                            "9m",
+                            "0m",
+                            "1p",
+                            "2p",
+                            "3p",
+                            "4p",
+                            "5p",
+                            "6p",
+                            "7p",
+                            "8p",
+                            "9p",
+                            "0p",
+                            "1s",
+                            "2s",
+                            "3s",
+                            "4s",
+                            "5s",
+                            "6s",
+                            "7s",
+                            "8s",
+                            "9s",
+                            "0s",
+                            "1z",
+                            "2z",
+                            "3z",
+                            "4z",
+                            "5z",
+                            "6z",
+                            "7z"
+                          ]
+                        },
+                        "yaku": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "enum": [
+                                  "riichi",
+                                  "ippatsu",
+                                  "menzen_tsumo",
+                                  "pinfu",
+                                  "tanyao",
+                                  "yakuhai_haku",
+                                  "yakuhai_hatsu",
+                                  "yakuhai_chun",
+                                  "yakuhai_seat_wind",
+                                  "yakuhai_round_wind",
+                                  "iipeikou",
+                                  "haitei_raoyue",
+                                  "houtei_raoyui",
+                                  "rinshan_kaihou",
+                                  "chankan",
+                                  "double_riichi",
+                                  "chiitoitsu",
+                                  "sanshoku_doujun",
+                                  "ittsuu",
+                                  "chanta",
+                                  "toitoi",
+                                  "sanankou",
+                                  "sanshoku_doukou",
+                                  "sankantsu",
+                                  "shousangen",
+                                  "honroutou",
+                                  "honitsu",
+                                  "junchan",
+                                  "ryanpeikou",
+                                  "chinitsu",
+                                  "kokushi_musou",
+                                  "suuankou",
+                                  "daisangen",
+                                  "shousuushii",
+                                  "daisuushii",
+                                  "tsuuiisou",
+                                  "chinroutou",
+                                  "ryuuiisou",
+                                  "chuuren_poutou",
+                                  "suukantsu",
+                                  "tenhou",
+                                  "chiihou"
+                                ]
+                              },
+                              "han": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "han"
+                            ]
+                          }
+                        },
+                        "yakuman": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "riichi",
+                              "ippatsu",
+                              "menzen_tsumo",
+                              "pinfu",
+                              "tanyao",
+                              "yakuhai_haku",
+                              "yakuhai_hatsu",
+                              "yakuhai_chun",
+                              "yakuhai_seat_wind",
+                              "yakuhai_round_wind",
+                              "iipeikou",
+                              "haitei_raoyue",
+                              "houtei_raoyui",
+                              "rinshan_kaihou",
+                              "chankan",
+                              "double_riichi",
+                              "chiitoitsu",
+                              "sanshoku_doujun",
+                              "ittsuu",
+                              "chanta",
+                              "toitoi",
+                              "sanankou",
+                              "sanshoku_doukou",
+                              "sankantsu",
+                              "shousangen",
+                              "honroutou",
+                              "honitsu",
+                              "junchan",
+                              "ryanpeikou",
+                              "chinitsu",
+                              "kokushi_musou",
+                              "suuankou",
+                              "daisangen",
+                              "shousuushii",
+                              "daisuushii",
+                              "tsuuiisou",
+                              "chinroutou",
+                              "ryuuiisou",
+                              "chuuren_poutou",
+                              "suukantsu",
+                              "tenhou",
+                              "chiihou"
+                            ]
+                          }
+                        },
+                        "dora": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "uraDora": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "redDora": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "han": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "fu": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "points": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "scoreDeltas": {
+                          "minItems": 4,
+                          "maxItems": 4,
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "limitName": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "mangan",
+                                "haneman",
+                                "baiman",
+                                "sanbaiman",
+                                "kazoe_yakuman",
+                                "yakuman"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "seat",
+                        "from",
+                        "hand",
+                        "melds",
+                        "winningTile",
+                        "yaku",
+                        "yakuman",
+                        "dora",
+                        "uraDora",
+                        "redDora",
+                        "han",
+                        "fu",
+                        "points",
+                        "scoreDeltas",
+                        "limitName"
+                      ]
+                    }
+                  },
+                  "scores": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "scoreDeltas": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "uraIndicators": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "1m",
+                        "2m",
+                        "3m",
+                        "4m",
+                        "5m",
+                        "6m",
+                        "7m",
+                        "8m",
+                        "9m",
+                        "0m",
+                        "1p",
+                        "2p",
+                        "3p",
+                        "4p",
+                        "5p",
+                        "6p",
+                        "7p",
+                        "8p",
+                        "9p",
+                        "0p",
+                        "1s",
+                        "2s",
+                        "3s",
+                        "4s",
+                        "5s",
+                        "6s",
+                        "7s",
+                        "8s",
+                        "9s",
+                        "0s",
+                        "1z",
+                        "2z",
+                        "3z",
+                        "4z",
+                        "5z",
+                        "6z",
+                        "7z"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "t",
+                  "winners",
+                  "scores",
+                  "scoreDeltas"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "ryuukyoku"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "exhaustive",
+                      "kyuushu_kyuuhai",
+                      "suufon_renda",
+                      "suucha_riichi",
+                      "suukaikan",
+                      "sanchahou"
+                    ]
+                  },
+                  "tenpai": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "boolean"
+                    }
+                  },
+                  "hands": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "1m",
+                              "2m",
+                              "3m",
+                              "4m",
+                              "5m",
+                              "6m",
+                              "7m",
+                              "8m",
+                              "9m",
+                              "0m",
+                              "1p",
+                              "2p",
+                              "3p",
+                              "4p",
+                              "5p",
+                              "6p",
+                              "7p",
+                              "8p",
+                              "9p",
+                              "0p",
+                              "1s",
+                              "2s",
+                              "3s",
+                              "4s",
+                              "5s",
+                              "6s",
+                              "7s",
+                              "8s",
+                              "9s",
+                              "0s",
+                              "1z",
+                              "2z",
+                              "3z",
+                              "4z",
+                              "5z",
+                              "6z",
+                              "7z"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "scores": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "scoreDeltas": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "nagashi": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 0
+                        },
+                        {
+                          "type": "number",
+                          "const": 1
+                        },
+                        {
+                          "type": "number",
+                          "const": 2
+                        },
+                        {
+                          "type": "number",
+                          "const": 3
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "t",
+                  "reason",
+                  "tenpai",
+                  "hands",
+                  "scores",
+                  "scoreDeltas"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "hand-end"
+                  },
+                  "nextDealer": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "const": 0
+                      },
+                      {
+                        "type": "number",
+                        "const": 1
+                      },
+                      {
+                        "type": "number",
+                        "const": 2
+                      },
+                      {
+                        "type": "number",
+                        "const": 3
+                      }
+                    ]
+                  },
+                  "nextHonba": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "riichiSticks": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "t",
+                  "nextDealer",
+                  "nextHonba",
+                  "riichiSticks"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "const": "game-end"
+                  },
+                  "placements": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "seat": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 0
+                            },
+                            {
+                              "type": "number",
+                              "const": 1
+                            },
+                            {
+                              "type": "number",
+                              "const": 2
+                            },
+                            {
+                              "type": "number",
+                              "const": 3
+                            }
+                          ]
+                        },
+                        "place": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 1
+                            },
+                            {
+                              "type": "number",
+                              "const": 2
+                            },
+                            {
+                              "type": "number",
+                              "const": 3
+                            },
+                            {
+                              "type": "number",
+                              "const": 4
+                            }
+                          ]
+                        },
+                        "finalScore": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "netScore": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "seat",
+                        "place",
+                        "finalScore",
+                        "netScore"
+                      ]
+                    }
+                  },
+                  "seed": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "t",
+                  "placements",
+                  "seed"
+                ]
+              }
+            ]
+          }
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+        },
+        "endedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+        }
+      },
+      "required": [
+        "gameId",
+        "config",
+        "length",
+        "players",
+        "userIds",
+        "seed",
+        "seedHash",
+        "placements",
+        "hands",
+        "events",
+        "startedAt",
+        "endedAt"
+      ]
     },
     "RuleConfig": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -9213,6 +12407,206 @@
         "password"
       ],
       "additionalProperties": false
+    },
+    "UserProfile": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{24}$"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "avatarId": {
+          "type": "string"
+        },
+        "isGuest": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+        },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{24}$"
+            },
+            "games": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "hanchan": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "tonpuusen": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "placements": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ]
+            },
+            "avgPlacement": {
+              "type": "number"
+            },
+            "totalNetScore": {
+              "type": "number"
+            },
+            "busts": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "hands": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "wins": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "winRate": {
+              "type": "number"
+            },
+            "dealIns": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "dealInRate": {
+              "type": "number"
+            },
+            "tsumoWins": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "riichiDeclared": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "riichiRate": {
+              "type": "number"
+            },
+            "riichiWinRate": {
+              "type": "number"
+            },
+            "callRate": {
+              "type": "number"
+            },
+            "tenpaiAtDraw": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "drawsPlayed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "avgWinPoints": {
+              "type": "number"
+            },
+            "avgDealInPoints": {
+              "type": "number"
+            },
+            "avgWinTurn": {
+              "type": "number"
+            },
+            "yakuCounts": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "yakumanCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+            }
+          },
+          "required": [
+            "userId",
+            "games",
+            "hanchan",
+            "tonpuusen",
+            "placements",
+            "avgPlacement",
+            "totalNetScore",
+            "busts",
+            "hands",
+            "wins",
+            "winRate",
+            "dealIns",
+            "dealInRate",
+            "tsumoWins",
+            "riichiDeclared",
+            "riichiRate",
+            "riichiWinRate",
+            "callRate",
+            "tenpaiAtDraw",
+            "drawsPlayed",
+            "avgWinPoints",
+            "avgDealInPoints",
+            "avgWinTurn",
+            "yakuCounts",
+            "yakumanCount",
+            "updatedAt"
+          ]
+        }
+      },
+      "required": [
+        "userId",
+        "displayName",
+        "avatarId",
+        "isGuest",
+        "createdAt",
+        "stats"
+      ]
     },
     "Wind": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",

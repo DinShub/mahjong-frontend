@@ -1,5 +1,8 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 
+import { DEFAULT_LOCALE, STORAGE_KEY } from '@core/i18n/locale';
+import type { Locale } from '@core/i18n/locale';
+
 /**
  * Player preferences.
  *
@@ -28,6 +31,17 @@ export interface Settings {
   autoSortHand: boolean;
   /** `null` follows `prefers-reduced-motion`; `true`/`false` override it. */
   reduceMotion: boolean | null;
+  /**
+   * **[M5]** `en` or `ja`. Read before bootstrap by `core/i18n/locale.ts` as well as here, because
+   * `loadTranslations()` has to run before the injector exists.
+   */
+  locale: Locale;
+  /**
+   * **[M5]** Per-channel volume, 0…1. `docs/08-graphics-ux.md` §7 keeps SFX and voice separate and
+   * turns voice off by default on mobile; open decision 8's default — *"Ship silent; voice is
+   * optional"* — is why `voice` starts at 0 rather than at a level with nothing to play.
+   */
+  sound: { sfx: number; voice: number };
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -40,9 +54,11 @@ export const DEFAULT_SETTINGS: Settings = {
   highlightDora: true,
   autoSortHand: true,
   reduceMotion: null,
+  locale: DEFAULT_LOCALE,
+  sound: { sfx: 0.7, voice: 0 },
 };
 
-const STORAGE_KEY = 'mj.settings.v1';
+export { STORAGE_KEY };
 
 function read(): Settings {
   try {
@@ -50,7 +66,13 @@ function read(): Settings {
     if (raw == null) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(raw) as Partial<Settings>;
     // Merge rather than replace: a setting added in a later release must not reset the others.
-    return { ...DEFAULT_SETTINGS, ...parsed };
+    // `sound` is merged one level deeper for the same reason — a stored `{ sfx }` from before the
+    // voice channel existed must not leave `voice` undefined for a slider to bind to.
+    return {
+      ...DEFAULT_SETTINGS,
+      ...parsed,
+      sound: { ...DEFAULT_SETTINGS.sound, ...(parsed.sound ?? {}) },
+    };
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -71,6 +93,8 @@ export class SettingsService {
   readonly highlightDora = computed(() => this._settings().highlightDora);
   readonly autoSortHand = computed(() => this._settings().autoSortHand);
   readonly suitColour = computed(() => this._settings().suitColour);
+  readonly locale = computed(() => this._settings().locale);
+  readonly sound = computed(() => this._settings().sound);
 
   /** The setting wins where the player expressed one; otherwise the operating system does. */
   readonly reducedMotion = computed(
@@ -83,19 +107,38 @@ export class SettingsService {
       this.systemReducedMotion.set(event.matches);
     });
 
+    // The theme class is a *render* concern and an effect is the right shape for it. Persistence
+    // is not — see {@link persist}.
     effect(() => {
-      const settings = this._settings();
-      try {
-        globalThis.localStorage?.setItem(STORAGE_KEY, JSON.stringify(settings));
-      } catch {
-        // Private browsing: the preference holds for this session and no longer.
-      }
-      applyThemeClass(settings.theme);
+      applyThemeClass(this._settings().theme);
     });
+    // …and once at construction, before the first effect runs, because the app initializer
+    // constructs this service precisely so the stored theme is on the page before first paint.
+    applyThemeClass(this._settings().theme);
+  }
+
+  /**
+   * Write to storage **synchronously**, at the point the setting changes.
+   *
+   * This used to live in the effect above, and it was wrong in a way only an end-to-end test
+   * found: Angular schedules effects, so `set('locale', 'ja')` followed by `location.reload()`
+   * reloaded before the write landed and the app came back in English. The same race made a
+   * setting changed immediately before a `router.navigate` unreliable.
+   *
+   * A preference is not derived state, and storing it is not a side effect of rendering.
+   */
+  private persist(settings: Settings): void {
+    try {
+      globalThis.localStorage?.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch {
+      // Private browsing: the preference holds for this session and no longer.
+    }
   }
 
   update(patch: Partial<Settings>): void {
-    this._settings.update((current) => ({ ...current, ...patch }));
+    const next = { ...this._settings(), ...patch };
+    this.persist(next);
+    this._settings.set(next);
   }
 
   set<K extends keyof Settings>(key: K, value: Settings[K]): void {
@@ -103,6 +146,7 @@ export class SettingsService {
   }
 
   reset(): void {
+    this.persist(DEFAULT_SETTINGS);
     this._settings.set(DEFAULT_SETTINGS);
   }
 }
