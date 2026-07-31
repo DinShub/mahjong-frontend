@@ -4,6 +4,14 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Regenerating the visual baselines. They are Linux PNGs rendered with this image's fonts, so
+  # they cannot be produced on a developer's machine — see the `baselines` job at the bottom.
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: 'Re-render the visual baselines and upload them as an artifact'
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,6 +19,9 @@ concurrency:
 
 jobs:
   verify:
+    # Skipped on a baseline-regeneration run: the visual step is *expected* to differ there, and
+    # a red X on a run whose whole purpose was to produce new images teaches nothing.
+    if: github.event_name != 'workflow_dispatch' || !inputs.update_snapshots
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -89,3 +100,46 @@ jobs:
       - name: Dependency audit
         run: npm audit --audit-level=high
         continue-on-error: true
+
+  # ---------------------------------------------------------------------------
+  # Visual baselines
+  # ---------------------------------------------------------------------------
+  #
+  # Run with:  gh workflow run ci.yml -f update_snapshots=true
+  #
+  # No webfont is shipped (see ASSETS.md), so every screenshot is drawn in the platform's own
+  # fonts and a baseline rendered on Windows or macOS will never match this image. The images this
+  # job uploads are the runner's own output; download them, **look at each one**, and commit them.
+  #
+  # It uploads rather than pushes on purpose. A job that committed its own baselines would make
+  # every visual regression self-certifying — the failure mode this suite exists to catch.
+  baselines:
+    if: github.event_name == 'workflow_dispatch' && inputs.update_snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # `--update-snapshots` rewrites every baseline the project touches, including ones that did
+      # not change; the diff in review is what shows which actually moved.
+      - name: Re-render the visual baselines
+        run: npx playwright test --project=visual --update-snapshots
+
+      - name: Upload the baselines
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines-linux
+          path: e2e/visual.spec.ts-snapshots/
+          retention-days: 7

@@ -18,7 +18,20 @@ import { startGame, useFixture } from './support/app';
  * platform's own font. That is deliberate: no webfont is shipped (see `ASSETS.md`).
  */
 
-test.describe.configure({ mode: 'serial' });
+/**
+ * Not `serial`.
+ *
+ * `playwright.config.ts` already sets `fullyParallel: false` and `workers: 1`, so these run one at
+ * a time regardless — what `mode: 'serial'` added on top was *skip the rest of the file after the
+ * first failure*, and for a screenshot suite that is the wrong trade. One stale baseline then hides
+ * every other diff, so a change to shared chrome looks like a single failure and takes as many
+ * pushes to clear as it has screens. It did exactly that when M5 added a nav to the lobby header:
+ * the lobby diff reported, and the three new screens never ran at all.
+ *
+ * Each test here sets up whatever it needs (`useFixture`, its own viewport) before it starts, so
+ * there is no state to carry between them.
+ */
+test.describe.configure({ mode: 'default' });
 
 const MOVING_PARTS = ['[data-testid="deadline"]', '.ring'];
 
