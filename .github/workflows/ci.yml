@@ -132,10 +132,13 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      # `--update-snapshots` rewrites every baseline the project touches, including ones that did
-      # not change; the diff in review is what shows which actually moved.
+      # `=all`, not the default `changed`: the default only rewrites a baseline whose comparison
+      # *failed*, so a change that lands inside `maxDiffPixelRatio` is silently kept out of the
+      # image and the committed baseline drifts a little further from what the app renders every
+      # time. Rewriting unconditionally keeps the baseline equal to the current render, and the git
+      # diff — not the tolerance — is what shows which ones actually moved.
       - name: Re-render the visual baselines
-        run: npx playwright test --project=visual --update-snapshots
+        run: npx playwright test --project=visual --update-snapshots=all
 
       - name: Upload the baselines
         uses: actions/upload-artifact@v4
