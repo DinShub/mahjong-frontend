@@ -27,22 +27,10 @@ import { SettingsService } from '@core/settings/settings.service';
  * other change.
  */
 
-export type SfxName =
-  | 'discard'
-  | 'draw'
-  | 'call'
-  | 'riichi'
-  | 'win'
-  | 'tick';
+export type SfxName = 'discard' | 'draw' | 'call' | 'riichi' | 'win' | 'tick';
 
 /** The Japanese calls of `docs/08` §7, as ids a clip pack would be keyed by. */
-export type VoiceName =
-  | 'riichi'
-  | 'pon'
-  | 'chi'
-  | 'kan'
-  | 'ron'
-  | 'tsumo';
+export type VoiceName = 'riichi' | 'pon' | 'chi' | 'kan' | 'ron' | 'tsumo';
 
 interface Tone {
   /** Hz at the start, and at the end if it glides. */
@@ -130,7 +118,9 @@ export class SoundService {
       void this.context.resume().catch(() => undefined);
       return;
     }
-    const Ctor = globalThis.AudioContext ?? (globalThis as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    const Ctor =
+      globalThis.AudioContext ??
+      (globalThis as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (Ctor === undefined) return;
 
     try {

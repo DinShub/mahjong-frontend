@@ -133,10 +133,11 @@ describe('ProfileStore', () => {
   });
 
   it('shows a new player four empty bars rather than dividing by zero', async () => {
-    await load(
-      profile({ stats: stats({ games: 0, placements: [0, 0, 0, 0], avgPlacement: 0 }) }),
-      { games: [], nextCursor: null, total: 0 },
-    );
+    await load(profile({ stats: stats({ games: 0, placements: [0, 0, 0, 0], avgPlacement: 0 }) }), {
+      games: [],
+      nextCursor: null,
+      total: 0,
+    });
     expect(store.placementShares().every((bar) => bar.share === 0)).toBe(true);
     expect(store.games()).toEqual([]);
   });

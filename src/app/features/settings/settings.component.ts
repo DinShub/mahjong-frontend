@@ -52,7 +52,12 @@ import { TileComponent } from '@shared/tiles/tile.component';
 
         <div class="field">
           <span class="label" i18n="@@settings.theme">Theme</span>
-          <div class="group" role="radiogroup" i18n-aria-label="@@settings.theme" aria-label="Theme">
+          <div
+            class="group"
+            role="radiogroup"
+            i18n-aria-label="@@settings.theme"
+            aria-label="Theme"
+          >
             @for (option of themes; track option.value) {
               <button
                 type="button"
@@ -420,7 +425,10 @@ export class SettingsComponent {
   ];
 
   protected readonly discardModes: { value: DiscardMode; label: string }[] = [
-    { value: 'select-confirm', label: $localize`:@@settings.discardSelectConfirm:Select, then confirm` },
+    {
+      value: 'select-confirm',
+      label: $localize`:@@settings.discardSelectConfirm:Select, then confirm`,
+    },
     { value: 'one-click', label: $localize`:@@settings.discardOneClick:One click` },
   ];
 

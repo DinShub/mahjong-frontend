@@ -112,12 +112,10 @@ export async function buildWall(seed: string, handIndex: number): Promise<TileId
 }
 
 /** The 13-tile starting hands, by absolute seat. */
-export function dealToSeats(wall: readonly TileId[], dealer: Seat): [
-  TileId[],
-  TileId[],
-  TileId[],
-  TileId[],
-] {
+export function dealToSeats(
+  wall: readonly TileId[],
+  dealer: Seat,
+): [TileId[], TileId[], TileId[], TileId[]] {
   const byOffset: TileId[][] = [[], [], [], []];
   let index = 0;
   for (let round = 0; round < 3; round++) {

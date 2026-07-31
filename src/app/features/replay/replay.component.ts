@@ -53,7 +53,9 @@ import type { SeedVerdict } from './verify-seed';
         <p>{{ message }}</p>
       </div>
     } @else if (store.loading()) {
-      <div class="notice" data-testid="replay-loading"><p i18n="@@replay.loading">Loading replay…</p></div>
+      <div class="notice" data-testid="replay-loading">
+        <p i18n="@@replay.loading">Loading replay…</p>
+      </div>
     } @else if (store.view()) {
       @let view = store.view()!;
       <mj-stage>
@@ -399,7 +401,10 @@ export class ReplayComponent implements OnInit, OnDestroy {
       value: seat as ReplayViewer,
       label: players[seat]?.displayName ?? `Seat ${String(seat)}`,
     }));
-    return [...seats, { value: 'all' as const, label: $localize`:@@replay.allRevealed:All revealed` }];
+    return [
+      ...seats,
+      { value: 'all' as const, label: $localize`:@@replay.allRevealed:All revealed` },
+    ];
   });
 
   protected readonly handLabel = computed(() => {

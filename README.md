@@ -47,13 +47,18 @@ src/app/
 │   ├── socket/      typed socket.io wrapper, listener registry, RTT
 │   ├── auth/        session storage, refresh interceptor, guest bootstrap
 │   ├── session/     boot: a session, a socket, the active-table redirect
-│   ├── settings/    theme, tile set, discard mode, naming, reduced motion
+│   ├── settings/    theme, tile set, discard mode, naming, locale, sound
+│   ├── i18n/        the ja catalogue; installed before bootstrap
+│   ├── sound/       one AudioContext, synthesised effects, two channels
 │   ├── layout/      viewport → stage scale, portrait breakpoint
 │   └── time/        the one clock; a test drives it by hand
 ├── features/
 │   ├── landing/     play as guest, sign in, upgrade; connection status
 │   ├── lobby/       quickmatch, create a table, join by code
 │   ├── table/       the pre-game seat/ready screen
+│   ├── profile/     aggregates + game history                            [M5]
+│   ├── replay/      the game's render layer, fed from a fetched log      [M5]
+│   ├── settings/    every preference, in one place                       [M5]
 │   └── game/
 │       ├── state/   the event fold, the pacing queue, seat↔position
 │       ├── render/  stage, board, seat zones, hands, ponds, melds, centre
@@ -79,6 +84,10 @@ and **the view the engine held at the end**. That last part is what `apply-event
 client's event fold to — a reference produced by the engine that passes the 12 009-hand conformance
 gate, rather than an expectation somebody typed.
 
+`test-fixtures/replay.json` is the odd one out: a **whole** game rather than a hand, **unredacted**
+rather than projected, in the shape `GET /replays/:gameId` serves. It is what the replay tests fold
+and what the seed verifier is checked against.
+
 ```bash
 npm run sync:contracts -- --backend ../path/to/backend
 npm run check:contracts        # CI: fails on hand-edits and on drift
@@ -100,11 +109,12 @@ The protocol version is **not** an environment value: it comes from the synced c
 
 ## Testing
 
-| Level             | Where                | Notes                                                       |
-| ----------------- | -------------------- | ----------------------------------------------------------- |
-| Unit / component  | `src/**/*.spec.ts`   | vitest + jsdom; TestBed works normally                      |
-| E2E               | `e2e/game.spec.ts`   | Playwright vs the mock, at desktop **and** phone viewports  |
-| Visual regression | `e2e/visual.spec.ts` | screenshot diffs at three viewports, own Playwright project |
+| Level             | Where                         | Notes                                                       |
+| ----------------- | ----------------------------- | ----------------------------------------------------------- |
+| Unit / component  | `src/**/*.spec.ts`            | vitest + jsdom; TestBed works normally                      |
+| E2E               | `e2e/game.spec.ts`            | Playwright vs the mock, at desktop **and** phone viewports  |
+| E2E               | `e2e/around-the-game.spec.ts` | profile, history, replay, settings, ja                      |
+| Visual regression | `e2e/visual.spec.ts`          | screenshot diffs at three viewports, own Playwright project |
 
 The e2e run starts its own app server on :4300 and its own mock on :3100 and never reuses an
 existing server, so it cannot accidentally test whatever else happens to be listening on :4200. It
@@ -118,6 +128,13 @@ nothing itself.
 
 Coverage is gated: 70% globally, and 90% on the parts a screenshot cannot check — the event fold,
 the pacing queue, the meld layout, and the mapping from `prompt.options` to buttons.
+
+**The seed verifier is checked against the server, twice.** `features/replay/verify-seed.ts` is a
+deliberate second implementation of the engine's wall derivation — a verifier sharing code with the
+thing it verifies would prove only self-consistency. `verify-seed.spec.ts` pins it to golden values
+the backend engine produced, and `around-the-game.spec.ts` presses the button in a real browser
+against `test-fixtures/replay.json`, a whole game the backend engine actually dealt and publishes
+through `emit:fixtures`.
 
 ## Assets
 

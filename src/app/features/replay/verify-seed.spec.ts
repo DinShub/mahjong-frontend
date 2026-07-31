@@ -146,12 +146,7 @@ describe('verifyReplay', () => {
       log({
         events: [
           handStart(0, 0, HAND0),
-          handStart(3, 3, [
-            HAND3_DEALER3.seat0,
-            HAND0[1],
-            HAND0[2],
-            HAND3_DEALER3.seat3,
-          ]),
+          handStart(3, 3, [HAND3_DEALER3.seat0, HAND0[1], HAND0[2], HAND3_DEALER3.seat3]),
         ],
       }),
     );

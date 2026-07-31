@@ -136,7 +136,11 @@ export class ReplayStore {
     if (log === null) return null;
     const hand = this.currentHand();
     if (hand === null) return null;
-    for (let index = Math.min(this._cursor(), hand.endEvent - 1); index >= hand.startEvent; index--) {
+    for (
+      let index = Math.min(this._cursor(), hand.endEvent - 1);
+      index >= hand.startEvent;
+      index--
+    ) {
       const event = log.events[index];
       if (event?.t === 'agari' || event?.t === 'ryuukyoku') return event;
     }

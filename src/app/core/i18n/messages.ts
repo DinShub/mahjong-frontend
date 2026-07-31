@@ -86,8 +86,7 @@ const JA: MessageCatalogue = {
   'settings.autoSort': '手牌を自動整理',
   'settings.play': 'プレイ',
   'settings.discardMode': '打牌方法',
-  'settings.discardHint':
-    'ワンクリックは速い代わりに誤打が増えます。既定は選択してから確定です。',
+  'settings.discardHint': 'ワンクリックは速い代わりに誤打が増えます。既定は選択してから確定です。',
   'settings.yakuNames': '役名',
   'settings.tileNames': '牌の名前',
   'settings.sound': '音',

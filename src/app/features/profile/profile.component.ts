@@ -113,9 +113,7 @@ const TOP_YAKU = 8;
                 }
               </ol>
               @if (s.yakumanCount > 0) {
-                <p class="yakuman" data-testid="profile-yakuman">
-                  {{ s.yakumanCount }} yakuman
-                </p>
+                <p class="yakuman" data-testid="profile-yakuman">{{ s.yakumanCount }} yakuman</p>
               }
             </section>
           }
@@ -144,7 +142,10 @@ const TOP_YAKU = 8;
                     <span class="line muted">
                       {{ game.startedAt | date: 'short' }}
                       @if (game.status !== 'finished') {
-                        · <span class="tag">{{ game.status === 'in_progress' ? 'live' : 'abandoned' }}</span>
+                        ·
+                        <span class="tag">{{
+                          game.status === 'in_progress' ? 'live' : 'abandoned'
+                        }}</span>
                       }
                     </span>
                   </span>
